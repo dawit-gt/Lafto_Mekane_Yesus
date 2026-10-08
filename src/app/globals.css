@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+/*
+  DESIGN TOKENS — Lafto Mekaneyesus (EECMY)
+  Deep evergreen base + warm brass accent on warm paper — grounded in
+  "Mekane Yesus" (Place of Jesus) imagery, deliberately avoiding the
+  generic AI cream+terracotta pairing.
+  Noto Serif + Noto Sans chosen because both carry full Ethiopic glyph
+  coverage, so English and Amharic content share one type family.
+*/
+
+:root {
+  --ink: #17231d;
+  --forest: #1e4635;
+  --forest-deep: #142f25;
+  --brass: #b98a34;
+  --brass-dim: #8f6a26;
+  --paper: #f6f2e7;
+  --paper-raised: #ffffff;
+  --line: #dcd3be;
+  --clay: #7a4a2e;
+
+  --font-serif: var(--font-noto-serif), "Noto Serif Ethiopic", Georgia, serif;
+  --font-sans: var(--font-noto-sans), "Noto Sans Ethiopic", system-ui, sans-serif;
+}
+
+@theme inline {
+  --color-ink: var(--ink);
+  --color-forest: var(--forest);
+  --color-forest-deep: var(--forest-deep);
+  --color-brass: var(--brass);
+  --color-brass-dim: var(--brass-dim);
+  --color-paper: var(--paper);
+  --color-paper-raised: var(--paper-raised);
+  --color-line: var(--line);
+  --color-clay: var(--clay);
+  --font-serif: var(--font-serif);
+  --font-sans: var(--font-sans);
+}
+
+* {
+  border-color: var(--line);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-serif);
+  letter-spacing: -0.01em;
+}
+
+:focus-visible {
+  outline: 2px solid var(--brass);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.prose-body p {
+  margin-bottom: 1em;
+  line-height: 1.7;
+  max-width: 70ch;
+}
