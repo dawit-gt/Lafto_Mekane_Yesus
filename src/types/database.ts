@@ -82,8 +82,7 @@ export interface Database {
         Relationships: [];
       };
       members: {
-        Row: { id: string; auth_user_id: string | null; full_name: string; email: string | null; phone: string | null; membership_status: "active" | "inactive"; ministry_ids: string[]; directory_visible: boolean; created_at: string; updated_at: string };
-        Insert: Partial<Database["public"]["Tables"]["members"]["Row"]> & { full_name: string };
+        Row: { id: string; auth_user_id: string | null; full_name: string; phone: string | null; marital_status: "married" | "not_married" | null; occupation: string | null; children_count: number | null; photo_path: string | null; membership_status: "active" | "inactive"; ministry_ids: string[]; directory_visible: boolean; created_at: string; updated_at: string };        Insert: Partial<Database["public"]["Tables"]["members"]["Row"]> & { full_name: string };
         Update: Partial<Database["public"]["Tables"]["members"]["Row"]>;
         Relationships: [];
       };
