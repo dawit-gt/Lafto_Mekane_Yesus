@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { Noto_Serif, Noto_Sans } from "next/font/google";
+import { Noto_Serif, Noto_Sans, Noto_Serif_Ethiopic, Noto_Sans_Ethiopic } from "next/font/google";
 import "./globals.css";
 import { siteUrl } from "@/lib/site-url";
+import { getLocale } from "@/lib/i18n/server";
 
 const notoSerif = Noto_Serif({
   variable: "--font-noto-serif",
@@ -17,8 +18,21 @@ const notoSans = Noto_Sans({
   display: "swap",
 });
 
+const notoSerifEthiopic = Noto_Serif_Ethiopic({
+  variable: "--font-noto-serif-ethiopic",
+  subsets: ["ethiopic"],
+  display: "swap",
+});
+
+const notoSansEthiopic = Noto_Sans_Ethiopic({
+  variable: "--font-noto-sans-ethiopic",
+  subsets: ["ethiopic"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
-      metadataBase: new URL(siteUrl),  title: {
+  metadataBase: new URL(siteUrl),
+  title: {
     default: "Lafto Mekaneyesus | EECMY",
     template: "%s | Lafto Mekaneyesus",
   },
@@ -30,13 +44,14 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const locale = await getLocale();
   return (
-    <html lang="en">
+    <html lang={locale}>
       <body
-        className={`${notoSerif.variable} ${notoSans.variable} antialiased`}
+        className={`${notoSerif.variable} ${notoSans.variable} ${notoSerifEthiopic.variable} ${notoSansEthiopic.variable} antialiased`}
       >
         {children}
       </body>

@@ -1,22 +1,27 @@
-export const primaryNav = [
-  { label: "Home", href: "/" },
-  { label: "About", href: "/about" },
-  { label: "Visit Us", href: "/visit" },
-  { label: "Ministries", href: "/ministries" },
-  { label: "Sermons", href: "/sermons" },
-  { label: "Events", href: "/events" },
-  { label: "Contact", href: "/contact" },
-] as const;
+import type { Dictionary } from "@/lib/i18n/dictionaries";
 
-export const secondaryNav = [
-  { label: "Stories", href: "/stories" },
-  { label: "Announcements", href: "/announcements" },
-  { label: "Prayer Requests", href: "/prayer" },
-  { label: "Members", href: "/members" },
-] as const;
+type NavKey = keyof Dictionary["nav"];
+export type NavItem = { key: NavKey; href: string };
 
-export const legalNav = [
-  { label: "Privacy", href: "/privacy" },
-  { label: "Terms", href: "/terms" },
-  { label: "Accessibility", href: "/accessibility" },
-] as const;
+export const primaryNav: readonly NavItem[] = [
+  { key: "home", href: "/" },
+  { key: "about", href: "/about" },
+  { key: "visit", href: "/visit" },
+  { key: "ministries", href: "/ministries" },
+  { key: "sermons", href: "/sermons" },
+  { key: "events", href: "/events" },
+  { key: "contact", href: "/contact" },
+];
+
+export const secondaryNav: readonly NavItem[] = [
+  { key: "stories", href: "/stories" },
+  { key: "announcements", href: "/announcements" },
+  { key: "prayer", href: "/prayer" },
+  { key: "members", href: "/members" },
+];
+
+export const legalNav: readonly NavItem[] = [
+  { key: "privacy", href: "/privacy" },
+  { key: "terms", href: "/terms" },
+  { key: "accessibility", href: "/accessibility" },
+];

@@ -20,9 +20,8 @@
   --line: #dcd3be;
   --clay: #7a4a2e;
 
-  --font-serif: var(--font-noto-serif), "Noto Serif Ethiopic", Georgia, serif;
-  --font-sans: var(--font-noto-sans), "Noto Sans Ethiopic", system-ui, sans-serif;
-}
+  --font-serif: var(--font-noto-serif), var(--font-noto-serif-ethiopic), Georgia, serif;
+  --font-sans: var(--font-noto-sans), var(--font-noto-sans-ethiopic), system-ui, sans-serif;}
 
 @theme inline {
   --color-ink: var(--ink);
