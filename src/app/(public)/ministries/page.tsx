@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Section } from "@/components/ui/Section";
 import { Card } from "@/components/ui/Card";
+import { SiteImage } from "@/components/ui/SiteImage";
 import { getMinistries } from "@/lib/data/public";
 
 export const metadata: Metadata = {
@@ -27,11 +28,19 @@ export default async function MinistriesPage() {
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {ministries.map((ministry) => (
               <Card key={ministry.id}>
-                <div className="aspect-video rounded-sm bg-line" />
+                <SiteImage
+                  src={ministry.image_url}
+                  className="aspect-video w-full rounded-sm"
+                />
+
                 <h2 className="mt-4 font-serif text-lg font-semibold text-ink">
                   {ministry.name}
                 </h2>
-                <p className="mt-2 text-sm text-ink/75">{ministry.summary}</p>
+
+                <p className="mt-2 text-sm text-ink/75">
+                  {ministry.summary}
+                </p>
+
                 <Link
                   href={`/ministries/${ministry.slug}`}
                   className="mt-3 inline-block text-sm font-medium text-forest underline underline-offset-4"

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Section } from "@/components/ui/Section";
 import { Card } from "@/components/ui/Card";
+import { SiteImage } from "@/components/ui/SiteImage";
 import { getLeaders } from "@/lib/data/public";
 
 export const metadata: Metadata = {
@@ -56,7 +57,10 @@ export default async function AboutPage() {
           <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {leaders.map((leader) => (
               <Card key={leader.id}>
-                <div className="h-32 w-32 rounded-full bg-line" />
+                <SiteImage
+                  src={leader.photo_url}
+                  className="h-32 w-32 rounded-full"
+                />
 
                 <h3 className="mt-4 font-serif text-lg font-semibold text-ink">
                   {leader.full_name}
