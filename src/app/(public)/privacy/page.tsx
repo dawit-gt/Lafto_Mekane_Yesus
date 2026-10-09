@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { LegalPage } from "@/components/sections/LegalPage";
 import { siteConfig } from "@/lib/site-config";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
@@ -8,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 export default function PrivacyPage() {
-  const { churchName, denominationName, contactEmail, retentionMonths, legalLastUpdated } =
+  const { churchName, denominationName, retentionMonths, legalLastUpdated } =
     siteConfig;
 
   return (
@@ -21,7 +22,7 @@ export default function PrivacyPage() {
       <p>
         {churchName} is a congregation of the {denominationName}. This website is run by the
         church&apos;s website team. Questions about this policy can be sent to{" "}
-        <a href={`mailto:${contactEmail}`}>{contactEmail}</a>.
+        <Link href="/contact">contact form</Link>.
       </p>
 
       <h2>What we collect and why</h2>
@@ -96,7 +97,7 @@ export default function PrivacyPage() {
       <h2>Your choices</h2>
       <p>
         You can ask us what we hold about you, ask us to correct it, or ask us to delete it, by
-        writing to <a href={`mailto:${contactEmail}`}>{contactEmail}</a>. You can also send a
+        writing to <Link href="/contact">contact form</Link>. You can also send a
         prayer request without giving your name.
       </p>
 

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { LegalPage } from "@/components/sections/LegalPage";
 import { siteConfig } from "@/lib/site-config";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Terms of Use",
@@ -8,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 export default function TermsPage() {
-  const { churchName, contactEmail, legalLastUpdated } = siteConfig;
+  const { churchName,  legalLastUpdated } = siteConfig;
 
   return (
     <LegalPage
@@ -79,7 +80,7 @@ export default function TermsPage() {
       <h2>Contact</h2>
       <p>
         Questions about these terms can be sent to{" "}
-        <a href={`mailto:${contactEmail}`}>{contactEmail}</a>.
+        <Link href="/contact">contact form</Link>..
       </p>
     </LegalPage>
   );

@@ -8,7 +8,6 @@ export const siteConfig = {
 
   // REQUIRED before launch: the address people should write to about privacy,
   // terms and accessibility. While this placeholder is here, it shows on the pages.
-  contactEmail: "SET-CHURCH-CONTACT-EMAIL-IN-site-config.ts",
 
   // How long the team keeps submissions before deleting them.
   // These are suggestions. The church should decide the real periods.

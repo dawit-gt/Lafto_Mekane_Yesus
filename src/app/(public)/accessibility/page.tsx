@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { LegalPage } from "@/components/sections/LegalPage";
 import { siteConfig } from "@/lib/site-config";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Accessibility",
@@ -8,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 export default function AccessibilityPage() {
-  const { churchName, contactEmail, legalLastUpdated } = siteConfig;
+  const { churchName,  legalLastUpdated } = siteConfig;
 
   return (
     <LegalPage
@@ -51,7 +52,7 @@ export default function AccessibilityPage() {
       <h2>Tell us about a problem</h2>
       <p>
         If you find something on this website hard to use, please tell us which page it was and
-        what went wrong, at <a href={`mailto:${contactEmail}`}>{contactEmail}</a>. We will try to
+        what went wrong, at <Link href="/contact">contact form</Link>. We will try to
         reply within a few working days and to fix the problem.
       </p>
     </LegalPage>
