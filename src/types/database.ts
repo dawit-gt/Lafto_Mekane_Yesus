@@ -144,3 +144,4 @@ export type Location = Database["public"]["Tables"]["locations"]["Row"];
 export type SiteSettings = Database["public"]["Tables"]["site_settings"]["Row"];
 export type GivingSettings = Database["public"]["Tables"]["giving_settings"]["Row"];
 export type Page = Database["public"]["Tables"]["pages"]["Row"];
+export type Member = Database["public"]["Tables"]["members"]["Row"];
