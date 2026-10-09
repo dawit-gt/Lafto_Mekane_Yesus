@@ -1,9 +1,11 @@
+
 "use client";
 
 import { useActionState } from "react";
 import { createStory, updateStory } from "@/lib/actions/admin-stories";
 import { initialFormState } from "@/lib/actions/state";
 import { TextField, TextAreaField, SelectField, CheckboxField } from "@/components/ui/Field";
+import { ImageUploadField } from "@/components/admin/ImageUploadField";
 import { SubmitButton } from "@/components/ui/SubmitButton";
 import { FormStatusBanner } from "@/components/forms/FormStatusBanner";
 import { slugify } from "@/lib/utils/slug";
@@ -78,6 +80,13 @@ export function StoryForm({ story }: { story?: Story }) {
         label="Feature this story on the homepage"
         name="featured"
         defaultChecked={story?.featured}
+      />
+
+      <ImageUploadField
+        label="Picture (optional)"
+        name="imageUrl"
+        defaultValue={story?.image_url}
+        errors={state.fieldErrors?.imageUrl}
       />
 
       <SelectField

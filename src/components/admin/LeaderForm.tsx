@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { createLeader, updateLeader } from "@/lib/actions/admin-leaders";
 import { initialFormState } from "@/lib/actions/state";
 import { TextField, TextAreaField, SelectField } from "@/components/ui/Field";
+import { ImageUploadField } from "@/components/admin/ImageUploadField";
 import { SubmitButton } from "@/components/ui/SubmitButton";
 import { FormStatusBanner } from "@/components/forms/FormStatusBanner";
 import type { Leader } from "@/types/database";
@@ -43,11 +44,10 @@ export function LeaderForm({ leader }: { leader?: Leader }) {
         errors={state.fieldErrors?.bioMd}
       />
 
-      <TextField
-        label="Photo URL (optional)"
+      <ImageUploadField
+        label="Photo (optional)"
         name="photoUrl"
-        defaultValue={leader?.photo_url ?? undefined}
-        hint="Full link to an image, e.g. https://..."
+        defaultValue={leader?.photo_url}
         errors={state.fieldErrors?.photoUrl}
       />
 

@@ -1,9 +1,11 @@
+
 "use client";
 
 import { useActionState } from "react";
 import { createSermon, updateSermon } from "@/lib/actions/admin-sermons";
 import { initialFormState } from "@/lib/actions/state";
 import { TextField, TextAreaField, SelectField } from "@/components/ui/Field";
+import { ImageUploadField } from "@/components/admin/ImageUploadField";
 import { SubmitButton } from "@/components/ui/SubmitButton";
 import { FormStatusBanner } from "@/components/forms/FormStatusBanner";
 import { slugify } from "@/lib/utils/slug";
@@ -115,6 +117,13 @@ export function SermonForm({ sermon, seriesOptions }: SermonFormProps) {
         defaultValue={sermon?.audio_url ?? undefined}
         hint="Used only if no video is available."
         errors={state.fieldErrors?.audioUrl}
+      />
+
+      <ImageUploadField
+        label="Thumbnail (optional)"
+        name="imageUrl"
+        defaultValue={sermon?.thumbnail_url}
+        errors={state.fieldErrors?.imageUrl}
       />
 
       <SelectField

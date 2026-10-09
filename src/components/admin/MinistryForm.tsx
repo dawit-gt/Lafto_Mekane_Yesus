@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { createMinistry, updateMinistry } from "@/lib/actions/admin-ministries";
 import { initialFormState } from "@/lib/actions/state";
 import { TextField, TextAreaField, SelectField } from "@/components/ui/Field";
+import { ImageUploadField } from "@/components/admin/ImageUploadField";
 import { SubmitButton } from "@/components/ui/SubmitButton";
 import { FormStatusBanner } from "@/components/forms/FormStatusBanner";
 import { slugify } from "@/lib/utils/slug";
@@ -99,6 +100,13 @@ export function MinistryForm({ ministry }: { ministry?: Ministry }) {
           errors={state.fieldErrors?.contactPhone}
         />
       </div>
+
+      <ImageUploadField
+        label="Picture (optional)"
+        name="imageUrl"
+        defaultValue={ministry?.image_url}
+        errors={state.fieldErrors?.imageUrl}
+      />
 
       <SelectField
         label="Status"

@@ -21,6 +21,7 @@ const sermonSchema = z.object({
   sermonDate: z.string().min(1, "Date is required."),
   videoUrl: z.string().trim().url("Enter a valid URL.").optional().or(z.literal("")),
   audioUrl: z.string().trim().url("Enter a valid URL.").optional().or(z.literal("")),
+  imageUrl: z.string().trim().url("Invalid picture link.").optional().or(z.literal("")),
   status: z.enum(["draft", "published", "archived"]),
 });
 
@@ -54,6 +55,7 @@ function parseSermonForm(formData: FormData) {
     sermonDate: formData.get("sermonDate"),
     videoUrl: formData.get("videoUrl"),
     audioUrl: formData.get("audioUrl"),
+    imageUrl: formData.get("imageUrl") ?? "",
     status: formData.get("status"),
   });
 }
@@ -79,6 +81,7 @@ export async function createSermon(_prevState: FormState, formData: FormData): P
         sermon_date: d.sermonDate,
         video_url: d.videoUrl || null,
         audio_url: d.audioUrl || null,
+        thumbnail_url: d.imageUrl || null,
         status: d.status,
       })
       .select("id")
@@ -122,6 +125,7 @@ export async function updateSermon(
         sermon_date: d.sermonDate,
         video_url: d.videoUrl || null,
         audio_url: d.audioUrl || null,
+        thumbnail_url: d.imageUrl || null,
         status: d.status,
       })
       .eq("id", id);

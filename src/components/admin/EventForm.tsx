@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { createEvent, updateEvent } from "@/lib/actions/admin-events";
 import { initialFormState } from "@/lib/actions/state";
 import { TextField, TextAreaField, SelectField } from "@/components/ui/Field";
+import { ImageUploadField } from "@/components/admin/ImageUploadField";
 import { SubmitButton } from "@/components/ui/SubmitButton";
 import { FormStatusBanner } from "@/components/forms/FormStatusBanner";
 import { slugify } from "@/lib/utils/slug";
@@ -121,6 +122,13 @@ export function EventForm({ event, locationOptions, ministryOptions }: EventForm
         defaultValue={event?.registration_url ?? undefined}
         hint="Full URL, e.g. https://forms.gle/..."
         errors={state.fieldErrors?.registrationUrl}
+      />
+
+      <ImageUploadField
+        label="Picture (optional)"
+        name="imageUrl"
+        defaultValue={event?.image_url}
+        errors={state.fieldErrors?.imageUrl}
       />
 
       <SelectField

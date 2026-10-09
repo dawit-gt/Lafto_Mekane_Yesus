@@ -17,6 +17,7 @@ const storySchema = z.object({
   category: z.enum(["testimony", "ministry", "community", ""]).optional(),
   bodyMd: z.string().trim().min(1, "Story content is required.").max(8000),
   featured: z.boolean(),
+  imageUrl: z.string().trim().url("Invalid picture link.").optional().or(z.literal("")),
   status: z.enum(["draft", "published", "archived"]),
 });
 
@@ -46,6 +47,7 @@ function parseStoryForm(formData: FormData) {
     category: formData.get("category"),
     bodyMd: formData.get("bodyMd"),
     featured: formData.get("featured") === "on",
+    imageUrl: formData.get("imageUrl") ?? "",
     status: formData.get("status"),
   });
 }
@@ -67,6 +69,7 @@ export async function createStory(_prevState: FormState, formData: FormData): Pr
         category: d.category || null,
         body_md: d.bodyMd,
         featured: d.featured,
+        image_url: d.imageUrl || null,
         status: d.status,
       })
       .select("id")
@@ -106,6 +109,7 @@ export async function updateStory(
         category: d.category || null,
         body_md: d.bodyMd,
         featured: d.featured,
+        image_url: d.imageUrl || null,
         status: d.status,
       })
       .eq("id", id);

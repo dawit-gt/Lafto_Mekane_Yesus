@@ -20,6 +20,7 @@ const ministrySchema = z.object({
   contactName: z.string().trim().max(200).optional().or(z.literal("")),
   contactEmail: z.string().trim().email("Enter a valid email address.").optional().or(z.literal("")),
   contactPhone: z.string().trim().max(40).optional().or(z.literal("")),
+  imageUrl: z.string().trim().url("Invalid picture link.").optional().or(z.literal("")),
   status: z.enum(["draft", "published", "archived"]),
 });
 
@@ -52,6 +53,7 @@ function parseMinistryForm(formData: FormData) {
     contactName: formData.get("contactName"),
     contactEmail: formData.get("contactEmail"),
     contactPhone: formData.get("contactPhone"),
+    imageUrl: formData.get("imageUrl") ?? "",
     status: formData.get("status"),
   });
 }
@@ -76,6 +78,7 @@ export async function createMinistry(_prevState: FormState, formData: FormData):
         contact_name: d.contactName || null,
         contact_email: d.contactEmail || null,
         contact_phone: d.contactPhone || null,
+        image_url: d.imageUrl || null,
         status: d.status,
       })
       .select("id")
@@ -118,6 +121,7 @@ export async function updateMinistry(
         contact_name: d.contactName || null,
         contact_email: d.contactEmail || null,
         contact_phone: d.contactPhone || null,
+        image_url: d.imageUrl || null,
         status: d.status,
       })
       .eq("id", id);

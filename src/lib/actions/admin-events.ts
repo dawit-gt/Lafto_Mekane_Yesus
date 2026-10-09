@@ -22,6 +22,7 @@ const eventSchema = z.object({
   locationId: z.string().uuid().optional().or(z.literal("")),
   ministryId: z.string().uuid().optional().or(z.literal("")),
   registrationUrl: z.string().trim().url("Enter a valid URL.").optional().or(z.literal("")),
+  imageUrl: z.string().trim().url("Invalid picture link.").optional().or(z.literal("")),
   status: z.enum(["draft", "published", "archived"]),
 });
 
@@ -56,6 +57,7 @@ function parseEventForm(formData: FormData) {
     locationId: formData.get("locationId"),
     ministryId: formData.get("ministryId"),
     registrationUrl: formData.get("registrationUrl"),
+    imageUrl: formData.get("imageUrl") ?? "",
     status: formData.get("status"),
   });
 }
@@ -81,6 +83,7 @@ export async function createEvent(_prevState: FormState, formData: FormData): Pr
         location_id: d.locationId || null,
         ministry_id: d.ministryId || null,
         registration_url: d.registrationUrl || null,
+        image_url: d.imageUrl || null,
         status: d.status,
       })
       .select("id")
@@ -124,6 +127,7 @@ export async function updateEvent(
         location_id: d.locationId || null,
         ministry_id: d.ministryId || null,
         registration_url: d.registrationUrl || null,
+        image_url: d.imageUrl || null,
         status: d.status,
       })
       .eq("id", id);
