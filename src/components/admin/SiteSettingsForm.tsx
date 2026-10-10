@@ -9,7 +9,10 @@ import { FormStatusBanner } from "@/components/forms/FormStatusBanner";
 import type { SiteSettings } from "@/types/database";
 
 export function SiteSettingsForm({ settings }: { settings: SiteSettings }) {
-  const [state, formAction] = useActionState(updateSiteSettings, initialFormState);
+  const [state, formAction] = useActionState(
+    updateSiteSettings,
+    initialFormState
+  );
 
   return (
     <form action={formAction} className="space-y-5">
@@ -28,6 +31,7 @@ export function SiteSettingsForm({ settings }: { settings: SiteSettings }) {
         label="Default Page Title (SEO)"
         name="seoDefaultTitle"
         defaultValue={settings.seo_default_title ?? undefined}
+        hint="The home page title in browser tabs and Google. About 60 characters works best. Leave empty to use the standard title."
         errors={state.fieldErrors?.seoDefaultTitle}
       />
 
@@ -36,7 +40,7 @@ export function SiteSettingsForm({ settings }: { settings: SiteSettings }) {
         name="seoDefaultDescription"
         rows={3}
         defaultValue={settings.seo_default_description ?? undefined}
-        hint="Shown by search engines under the site name."
+        hint="Shown by search engines and in link previews on Telegram and WhatsApp. About 150 characters works best. Leave empty to use the standard text."
         errors={state.fieldErrors?.seoDefaultDescription}
       />
 
