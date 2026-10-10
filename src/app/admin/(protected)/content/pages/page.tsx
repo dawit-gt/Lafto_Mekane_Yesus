@@ -55,6 +55,15 @@ export default async function AdminPagesPage() {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex justify-end gap-4">
+                      {page.status === "published" && (
+                        <Link
+                          href={`/pages/${page.slug}`}
+                          target="_blank"
+                          className="text-sm font-medium text-forest underline underline-offset-4"
+                        >
+                          View
+                        </Link>
+                      )}
                       <Link
                         href={`/admin/content/pages/${page.id}`}
                         className="text-sm font-medium text-forest underline underline-offset-4"

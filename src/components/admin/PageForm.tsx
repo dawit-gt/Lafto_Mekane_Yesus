@@ -12,6 +12,7 @@ import type { Page } from "@/types/database";
 function fillSlugFromTitle() {
   const titleInput = document.getElementById("title") as HTMLInputElement | null;
   const slugInput = document.getElementById("slug") as HTMLInputElement | null;
+
   if (titleInput && slugInput) {
     slugInput.value = slugify(titleInput.value);
   }
@@ -40,9 +41,10 @@ export function PageForm({ page }: { page?: Page }) {
           name="slug"
           required
           defaultValue={page?.slug}
-          hint="Used in the page URL, e.g. about-our-history"
+          hint="The page will be at /pages/your-slug. To link to it from other text, write [link text](/pages/your-slug)."
           errors={state.fieldErrors?.slug}
         />
+
         <button
           type="button"
           onClick={fillSlugFromTitle}
@@ -57,6 +59,7 @@ export function PageForm({ page }: { page?: Page }) {
         name="bodyMd"
         rows={14}
         defaultValue={page?.body_md}
+        hint="Formatting: **bold**, *italic*, [link text](https://example.org). Start lines with - for a bullet list, ## for a heading."
         errors={state.fieldErrors?.bodyMd}
       />
 

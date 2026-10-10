@@ -1,5 +1,15 @@
 import { createClient } from "@/lib/supabase/server";
-import type { Announcement, Event, Faq, Leader, Location, Ministry, Sermon, Story } from "@/types/database";
+import type {
+  Announcement,
+  Event,
+  Faq,
+  Leader,
+  Location,
+  Ministry,
+  Page,
+  Sermon,
+  Story,
+} from "@/types/database";
 
 export async function getUpcomingEvents(limit = 4): Promise<Event[]> {
   try {
@@ -258,6 +268,26 @@ export async function getGivingSettings() {
     return data;
   } catch (err) {
     console.error("getGivingSettings failed:", err);
+    return null;
+  }
+}
+
+export async function getPublishedPageBySlug(
+  slug: string,
+): Promise<Page | null> {
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("pages")
+      .select("*")
+      .eq("status", "published")
+      .eq("slug", slug)
+      .maybeSingle();
+
+    if (error) throw error;
+    return data;
+  } catch (err) {
+    console.error("getPublishedPageBySlug failed:", err);
     return null;
   }
 }

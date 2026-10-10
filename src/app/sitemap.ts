@@ -30,14 +30,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   if (!supabase) return entries;
 
   try {
-    const [sermons, events, ministries, stories] = await Promise.all([
+    const [sermons, events, ministries, stories, pages] = await Promise.all([
       supabase.from("sermons").select("slug, updated_at").eq("status", "published"),
       supabase.from("events").select("slug, updated_at").eq("status", "published"),
       supabase.from("ministries").select("slug, updated_at").eq("status", "published"),
       supabase.from("stories").select("slug, updated_at").eq("status", "published"),
+      supabase.from("pages").select("slug, updated_at").eq("status", "published"),
     ]);
 
-    const add = (prefix: string, rows: Array<{ slug: string; updated_at: string }> | null) => {
+    const add = (
+      prefix: string,
+      rows: Array<{ slug: string; updated_at: string }> | null,
+    ) => {
       for (const row of rows ?? []) {
         entries.push({
           url: `${siteUrl}${prefix}/${row.slug}`,
@@ -50,6 +54,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     add("/events", events.data);
     add("/ministries", ministries.data);
     add("/stories", stories.data);
+    add("/pages", pages.data);
   } catch (err) {
     console.error("sitemap: could not load published pages:", err);
   }
