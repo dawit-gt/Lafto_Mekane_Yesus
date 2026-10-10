@@ -2,9 +2,11 @@ import Link from "next/link";
 import { secondaryNav, legalNav } from "@/lib/nav";
 import { getSiteSettings } from "@/lib/data/public";
 import { getDictionary } from "@/lib/i18n/server";
+import { getTelegramGroupUrl } from "@/lib/site-config";
 
 export async function Footer() {
   const { dict } = await getDictionary();
+  const telegramUrl = getTelegramGroupUrl();
   const settings = await getSiteSettings();
   const serviceTimes =
     settings?.service_times_md?.trim() || dict.footer.defaultServiceTimes;
@@ -47,6 +49,18 @@ export async function Footer() {
             <li>
               <Link href="/contact#give" className="hover:text-paper-raised">{dict.footer.giving}</Link>
             </li>
+            {telegramUrl && (
+              <li>
+                <a
+                  href={telegramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-paper-raised"
+                >
+                  {dict.footer.telegram}
+                </a>
+              </li>
+            )}
           </ul>
         </div>
 
