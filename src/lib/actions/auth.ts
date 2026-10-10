@@ -63,34 +63,6 @@ export async function signInAdmin(
 }
 
 /** Members only need a valid Supabase Auth session — no extra role check. */
-export async function signInMember(
-  _prevState: AuthFormState,
-  formData: FormData
-): Promise<AuthFormState> {
-  const parsed = credentialsSchema.safeParse({
-    email: formData.get("email"),
-    password: formData.get("password"),
-  });
-
-  if (!parsed.success) {
-    return {
-      status: "error",
-      message: "Please enter a valid email and password.",
-    };
-  }
-
-  const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithPassword(parsed.data);
-
-  if (error) {
-    return {
-      status: "error",
-      message: "Incorrect email or password.",
-    };
-  }
-
-  redirect("/members");
-}
 
 export async function signOut() {
   const supabase = await createClient();

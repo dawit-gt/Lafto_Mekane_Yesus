@@ -44,9 +44,8 @@ export async function updateSession(request: NextRequest) {
   const isAdminRoute = path.startsWith("/admin") && path !== "/admin/login";
   const isMembersRoute = path.startsWith("/members") && path !== "/members/login";
 
-  if (!user && (isAdminRoute || isMembersRoute)) {
-    const redirectTo = isAdminRoute ? "/admin/login" : "/members/login";
-    const redirectUrl = new URL(redirectTo, request.url);
+  if (!user && isAdminRoute) {
+    const redirectUrl = new URL("/admin/login", request.url);
     redirectUrl.searchParams.set("next", path);
     return NextResponse.redirect(redirectUrl);
   }

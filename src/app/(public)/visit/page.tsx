@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Section } from "@/components/ui/Section";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { ChurchMap } from "@/components/ui/ChurchMap";
+import { siteConfig } from "@/lib/site-config";
 import { getFaqs, getPrimaryLocation, getSiteSettings } from "@/lib/data/public";
 
 export const metadata: Metadata = {
@@ -19,10 +21,6 @@ export default async function VisitPage() {
   const serviceTimes =
     settings?.service_times_md?.trim() ||
     "Sunday Worship — 8:00 AM & 10:30 AM\nWednesday Prayer — 6:00 PM";
-
-  const mapsQuery = location
-    ? encodeURIComponent(`${location.name}, ${location.address_line1}, ${location.city}`)
-    : "";
 
   return (
     <>
@@ -56,7 +54,7 @@ export default async function VisitPage() {
                   <p className="mt-2 text-sm text-ink/65">{location.directions_note}</p>
                 )}
                 <Button
-                  href={`https://www.google.com/maps/search/?api=1&query=${mapsQuery}`}
+                  href={siteConfig.map.shareUrl}
                   variant="ghost"
                   className="mt-3 px-0"
                 >
@@ -68,6 +66,8 @@ export default async function VisitPage() {
             )}
           </Card>
         </div>
+
+        <ChurchMap className="mt-8" />
       </Section>
 
       <Section tone="raised">

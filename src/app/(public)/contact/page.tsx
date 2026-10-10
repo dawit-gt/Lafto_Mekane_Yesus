@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { ContactForm } from "@/components/forms/ContactForm";
 import { VolunteerForm } from "@/components/forms/VolunteerForm";
+import { ChurchMap } from "@/components/ui/ChurchMap";
 import { getGivingSettings, getPrimaryLocation } from "@/lib/data/public";
 
 export const metadata: Metadata = {
@@ -85,6 +86,8 @@ export default async function ContactPage() {
         ) : (
           <p className="mt-4 text-ink/60">Address coming soon.</p>
         )}
+
+        <ChurchMap className="mt-6 max-w-3xl" />
       </Section>
     </>
   );

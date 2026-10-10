@@ -16,6 +16,13 @@ export const siteConfig = {
 
   // How long the team keeps submissions before deleting them.
   // These are suggestions. The church should decide the real periods.
+    // The church's real place on the map (taken from the church's Google Maps link).
+  map: {
+    latitude: 8.9515792,
+    longitude: 38.7457497,
+    shareUrl: "https://maps.app.goo.gl/EmWMNZbWEBn1owh4A",
+  },
+  
   retentionMonths: {
     contactMessages: 12,
     volunteerRequests: 12,
