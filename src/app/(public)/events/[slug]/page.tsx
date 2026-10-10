@@ -4,8 +4,9 @@ import { Section } from "@/components/ui/Section";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { SiteImage } from "@/components/ui/SiteImage";
+import { Markdown } from "@/components/ui/Markdown";
 import { getEventBySlug, getLocationById } from "@/lib/data/public";
-import { formatEventDateTime } from "@/lib/utils/format";
+import { excerpt, formatEventDateTime } from "@/lib/utils/format";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -17,7 +18,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!event) return { title: "Event Not Found" };
 
-  return { title: event.title, description: event.description ?? undefined };
+  return {
+    title: event.title,
+    description: event.description
+      ? excerpt(event.description, 155)
+      : undefined,
+  };
 }
 
 export default async function EventDetailPage({ params }: Props) {
@@ -48,9 +54,9 @@ export default async function EventDetailPage({ params }: Props) {
             />
 
             {event.description && (
-              <p className="prose-body whitespace-pre-line text-ink/85">
+              <Markdown className="text-ink/85">
                 {event.description}
-              </p>
+              </Markdown>
             )}
           </div>
 

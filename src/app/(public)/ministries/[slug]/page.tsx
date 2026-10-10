@@ -4,6 +4,7 @@ import { Section } from "@/components/ui/Section";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { SiteImage } from "@/components/ui/SiteImage";
+import { Markdown } from "@/components/ui/Markdown";
 import { getMinistryBySlug } from "@/lib/data/public";
 
 interface Props {
@@ -44,9 +45,9 @@ export default async function MinistryDetailPage({ params }: Props) {
             />
 
             {ministry.description_md && (
-              <p className="prose-body whitespace-pre-line text-ink/85">
+              <Markdown className="text-ink/85">
                 {ministry.description_md}
-              </p>
+              </Markdown>
             )}
           </div>
 

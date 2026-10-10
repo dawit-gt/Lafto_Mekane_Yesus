@@ -80,6 +80,7 @@ export function SermonForm({ sermon, seriesOptions }: SermonFormProps) {
       <TextAreaField
         label="Description"
         name="description"
+        hint="Formatting: **bold**, *italic*, [link text](https://example.com)"
         defaultValue={sermon?.description ?? undefined}
         errors={state.fieldErrors?.description}
       />

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useActionState } from "react";
@@ -31,6 +32,7 @@ export function AnnouncementForm({ announcement }: { announcement?: Announcement
       <TextAreaField
         label="Announcement"
         name="bodyMd"
+        hint="Formatting: **bold**, *italic*, [link text](https://example.com)"
         required
         rows={5}
         defaultValue={announcement?.body_md}
@@ -52,7 +54,9 @@ export function AnnouncementForm({ announcement }: { announcement?: Announcement
           label="Expires (optional)"
           name="expiresAtLocal"
           defaultValue={
-            announcement?.expires_at ? isoToDateTimeLocal(announcement.expires_at, SITE_TIMEZONE) : undefined
+            announcement?.expires_at
+              ? isoToDateTimeLocal(announcement.expires_at, SITE_TIMEZONE)
+              : undefined
           }
           hint="Disappears automatically after this time"
           errors={state.fieldErrors?.expiresAtLocal}

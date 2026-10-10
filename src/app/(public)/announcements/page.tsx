@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Section } from "@/components/ui/Section";
 import { Card } from "@/components/ui/Card";
+import { Markdown } from "@/components/ui/Markdown";
 import { getAnnouncements } from "@/lib/data/public";
 import { formatDate } from "@/lib/utils/format";
 
@@ -29,17 +30,21 @@ export default async function AnnouncementsPage() {
                 <p className="text-xs font-semibold uppercase tracking-wide text-brass">
                   {formatDate(announcement.publish_at.slice(0, 10))}
                 </p>
+
                 <h2 className="mt-1 font-serif text-lg font-semibold text-ink">
                   {announcement.title}
                 </h2>
-                <p className="mt-2 whitespace-pre-line text-sm leading-6 text-ink/80">
+
+                <Markdown className="mt-2 text-sm text-ink/80">
                   {announcement.body_md}
-                </p>
+                </Markdown>
               </Card>
             ))}
           </div>
         ) : (
-          <p className="text-ink/60">There are no announcements right now.</p>
+          <p className="text-ink/60">
+            There are no announcements right now.
+          </p>
         )}
       </Section>
     </>

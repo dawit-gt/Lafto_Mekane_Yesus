@@ -3,7 +3,11 @@
 import { useActionState } from "react";
 import { createMinistry, updateMinistry } from "@/lib/actions/admin-ministries";
 import { initialFormState } from "@/lib/actions/state";
-import { TextField, TextAreaField, SelectField } from "@/components/ui/Field";
+import {
+  TextField,
+  TextAreaField,
+  SelectField,
+} from "@/components/ui/Field";
 import { ImageUploadField } from "@/components/admin/ImageUploadField";
 import { SubmitButton } from "@/components/ui/SubmitButton";
 import { FormStatusBanner } from "@/components/forms/FormStatusBanner";
@@ -65,6 +69,7 @@ export function MinistryForm({ ministry }: { ministry?: Ministry }) {
       <TextAreaField
         label="Full Description"
         name="descriptionMd"
+        hint="Formatting: **bold**, *italic*, [link text](https://example.org). Start lines with - for a bullet list."
         rows={6}
         defaultValue={ministry?.description_md ?? undefined}
         errors={state.fieldErrors?.descriptionMd}

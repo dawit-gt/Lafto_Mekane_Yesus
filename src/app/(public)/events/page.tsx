@@ -4,7 +4,7 @@ import { Section } from "@/components/ui/Section";
 import { Card } from "@/components/ui/Card";
 import { SiteImage } from "@/components/ui/SiteImage";
 import { getEvents } from "@/lib/data/public";
-import { formatEventDateTime } from "@/lib/utils/format";
+import { excerpt, formatEventDateTime } from "@/lib/utils/format";
 
 export const metadata: Metadata = {
   title: "Events",
@@ -45,7 +45,7 @@ export default async function EventsPage() {
 
                 {event.description && (
                   <p className="mt-2 line-clamp-3 text-sm text-ink/70">
-                    {event.description}
+                    {excerpt(event.description, 200)}
                   </p>
                 )}
 

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
 import { SiteImage } from "@/components/ui/SiteImage";
+import { Markdown } from "@/components/ui/Markdown";
 import { getStoryBySlug } from "@/lib/data/public";
 import { excerpt, formatDate } from "@/lib/utils/format";
 
@@ -52,9 +53,7 @@ export default async function StoryDetailPage({ params }: Props) {
             className="mb-6 aspect-video w-full rounded-sm"
           />
 
-          <p className="whitespace-pre-line leading-7 text-ink/85">
-            {story.body_md}
-          </p>
+          <Markdown className="text-ink/85">{story.body_md}</Markdown>
 
           <Button href="/stories" variant="ghost" className="mt-8 px-0">
             ← All stories

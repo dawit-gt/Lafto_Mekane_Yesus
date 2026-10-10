@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useActionState } from "react";
@@ -67,6 +68,7 @@ export function EventForm({ event, locationOptions, ministryOptions }: EventForm
       <TextAreaField
         label="Description"
         name="description"
+        hint="Formatting: **bold**, *italic*, [link text](https://example.com)"
         defaultValue={event?.description ?? undefined}
         errors={state.fieldErrors?.description}
       />

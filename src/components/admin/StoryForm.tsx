@@ -1,10 +1,14 @@
-
 "use client";
 
 import { useActionState } from "react";
 import { createStory, updateStory } from "@/lib/actions/admin-stories";
 import { initialFormState } from "@/lib/actions/state";
-import { TextField, TextAreaField, SelectField, CheckboxField } from "@/components/ui/Field";
+import {
+  TextField,
+  TextAreaField,
+  SelectField,
+  CheckboxField,
+} from "@/components/ui/Field";
 import { ImageUploadField } from "@/components/admin/ImageUploadField";
 import { SubmitButton } from "@/components/ui/SubmitButton";
 import { FormStatusBanner } from "@/components/forms/FormStatusBanner";
@@ -70,6 +74,7 @@ export function StoryForm({ story }: { story?: Story }) {
       <TextAreaField
         label="Story"
         name="bodyMd"
+        hint="Formatting: **bold**, *italic*, [link text](https://example.org). Start lines with - for a bullet list."
         required
         rows={10}
         defaultValue={story?.body_md}

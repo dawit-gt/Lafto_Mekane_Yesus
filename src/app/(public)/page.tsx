@@ -9,7 +9,7 @@ import {
   getSiteSettings,
   getUpcomingEvents,
 } from "@/lib/data/public";
-import { formatEventDateTime } from "@/lib/utils/format";
+import { excerpt, formatEventDateTime } from "@/lib/utils/format";
 
 export default async function HomePage() {
   const [announcements, sermon, events, story, settings] = await Promise.all([
@@ -104,9 +104,15 @@ export default async function HomePage() {
                 {sermon.title}
               </h3>
               {sermon.description && (
-                <p className="mt-2 text-sm text-ink/75">{sermon.description}</p>
+                <p className="mt-2 text-sm text-ink/75">
+                  {excerpt(sermon.description, 160)}
+                </p>
               )}
-              <Button href={`/sermons/${sermon.slug}`} variant="ghost" className="mt-3 px-0">
+              <Button
+                href={`/sermons/${sermon.slug}`}
+                variant="ghost"
+                className="mt-3 px-0"
+              >
                 Watch this message →
               </Button>
             </div>
@@ -122,7 +128,10 @@ export default async function HomePage() {
       <Section tone="raised">
         <div className="flex items-baseline justify-between">
           <h2 className="text-2xl font-bold text-forest">Upcoming Events</h2>
-          <Link href="/events" className="text-sm font-medium text-forest underline underline-offset-4">
+          <Link
+            href="/events"
+            className="text-sm font-medium text-forest underline underline-offset-4"
+          >
             View all →
           </Link>
         </div>
@@ -138,7 +147,7 @@ export default async function HomePage() {
                 </h3>
                 {event.description && (
                   <p className="mt-2 line-clamp-2 text-sm text-ink/70">
-                    {event.description}
+                    {excerpt(event.description, 140)}
                   </p>
                 )}
                 <Link
@@ -170,10 +179,13 @@ export default async function HomePage() {
                 {story.title}
               </h2>
               <p className="prose-body mt-3 text-ink/80">
-                {story.body_md.slice(0, 220)}
-                {story.body_md.length > 220 ? "…" : ""}
+                {excerpt(story.body_md, 220)}
               </p>
-              <Button href={`/stories/${story.slug}`} variant="ghost" className="mt-2 px-0">
+              <Button
+                href={`/stories/${story.slug}`}
+                variant="ghost"
+                className="mt-2 px-0"
+              >
                 Read the full story →
               </Button>
             </div>
