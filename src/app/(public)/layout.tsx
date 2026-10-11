@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { BackToTop } from "@/components/ui/BackToTop";
 import { getDictionary } from "@/lib/i18n/server";
 
 export default async function PublicLayout({ children }: { children: ReactNode }) {
@@ -19,6 +20,7 @@ export default async function PublicLayout({ children }: { children: ReactNode }
         {children}
       </main>
       <Footer />
+      <BackToTop />
     </div>
   );
 }

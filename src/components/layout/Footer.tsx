@@ -3,6 +3,7 @@ import { secondaryNav, legalNav } from "@/lib/nav";
 import { getSiteSettings } from "@/lib/data/public";
 import { getDictionary } from "@/lib/i18n/server";
 import { getTelegramGroupUrl } from "@/lib/site-config";
+import { Logo } from "@/components/brand/Logo";
 
 export async function Footer() {
   const { dict } = await getDictionary();
@@ -12,11 +13,19 @@ export async function Footer() {
     settings?.service_times_md?.trim() || dict.footer.defaultServiceTimes;
 
   return (
-    <footer className="border-t border-line bg-forest text-paper-raised">
+    <footer className="tone-dark border-t border-line bg-forest-deep text-paper-raised">
       <div className="mx-auto grid max-w-6xl gap-10 px-6 py-14 sm:grid-cols-2 lg:grid-cols-4">
         <div>
-          <p className="font-serif text-lg font-bold">{dict.site.name}</p>
-          <p className="mt-1 text-sm text-paper-raised/70">
+          <div className="flex items-center gap-3">
+            <Logo size={48} />
+            <div className="leading-tight">
+              <p className="font-serif text-lg font-bold">{dict.site.name}</p>
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-brass">
+                {dict.site.tagline}
+              </p>
+            </div>
+          </div>
+          <p className="mt-3 text-sm text-paper-raised/70">
             {dict.site.denomination}
           </p>
           <p className="mt-4 whitespace-pre-line text-sm text-paper-raised/85">

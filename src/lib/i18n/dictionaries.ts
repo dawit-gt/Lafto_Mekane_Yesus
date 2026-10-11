@@ -3,6 +3,7 @@ import type { Locale } from "@/lib/i18n/config";
 const en = {
   site: {
     name: "Lafto Mekaneyesus",
+    tagline: "EECMY Congregation",
     denomination: "Ethiopian Evangelical Church Mekane Yesus",
     skipToContent: "Skip to main content",
   },
@@ -48,18 +49,19 @@ export type Dictionary = Widen<typeof en>;
 const am: Dictionary = {
   site: {
     name: "ላፍቶ መካነ ኢየሱስ",
+    tagline: "EECMY ጉባኤ",
     denomination: "የኢትዮጵያ ወንጌላዊት መካነ ኢየሱስ ቤተ ክርስቲያን",
     skipToContent: "ወደ ዋናው ይዘት ዝለል",
   },
   nav: {
-    home: "መነሻ ገጽ",
+    home: "መነሻ",
     about: "ስለ እኛ",
     visit: "ይጎብኙን",
-    ministries: "የአገልግሎት ክፍሎች",
+    ministries: "አገልግሎቶች",
     sermons: "ስብከቶች",
     events: "ዝግጅቶች",
     contact: "አግኙን",
-    stories: "ታሪክ",
+    stories: "ታሪኮች",
     announcements: "ማስታወቂያዎች",
     prayer: "የጸሎት ጥያቄዎች",
     members: "አባላት",
@@ -69,8 +71,8 @@ const am: Dictionary = {
   },
   header: {
     visitContact: "ይጎብኙን / ያግኙን",
-    openMenu: "ክፈት",
-    closeMenu: "ዝጋ",
+    openMenu: "ምናሌ ክፈት",
+    closeMenu: "ምናሌ ዝጋ",
     switchLanguage: "ቋንቋ",
   },
   footer: {

@@ -4,10 +4,10 @@ import type { ReactNode } from "react";
 type Variant = "primary" | "secondary" | "ghost";
 
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-sm px-5 py-2.5 text-sm font-semibold tracking-wide transition-colors duration-150 focus-visible:outline-none disabled:opacity-50 disabled:pointer-events-none";
+  "inline-flex items-center justify-center gap-2 rounded-sm px-5 py-2.5 text-sm font-semibold tracking-wide transition duration-150 active:scale-[0.97] focus-visible:outline-none disabled:opacity-50 disabled:pointer-events-none";
 
 const variants: Record<Variant, string> = {
-  primary: "bg-forest text-paper-raised hover:bg-forest-deep",
+  primary: "bg-forest text-paper-raised shadow-sm hover:bg-forest-deep hover:shadow-md",
   secondary: "bg-transparent text-forest border border-forest hover:bg-forest hover:text-paper-raised",
   ghost: "bg-transparent text-brass hover:text-brass-dim underline underline-offset-4 decoration-1",
 };

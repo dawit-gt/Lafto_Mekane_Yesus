@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { primaryNav } from "@/lib/nav";
 import { Button } from "@/components/ui/Button";
+import { Logo } from "@/components/brand/Logo";
 import { LanguageSwitch } from "@/components/layout/LanguageSwitch";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import type { Locale } from "@/lib/i18n/config";
@@ -12,13 +13,30 @@ import type { Locale } from "@/lib/i18n/config";
 export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-paper-raised/95 backdrop-blur">
+    <header
+      className={`sticky top-0 z-40 border-b border-line bg-paper-raised/95 backdrop-blur transition-shadow duration-300 ${
+        scrolled ? "shadow-md shadow-forest/10" : ""
+      }`}
+    >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <Link href="/" className="flex items-baseline gap-2" onClick={() => setMenuOpen(false)}>
-          <span className="font-serif text-xl font-bold text-forest">{dict.site.name}</span>
-          <span className="hidden text-xs text-clay sm:inline">EECMY</span>
+        <Link href="/" className="group flex items-center gap-3" onClick={() => setMenuOpen(false)}>
+          <Logo size={44} className="transition-transform duration-300 group-hover:scale-105" />
+          <span className="flex flex-col leading-tight">
+            <span className="font-serif text-lg font-bold text-forest sm:text-xl">{dict.site.name}</span>
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-clay">
+              {dict.site.tagline}
+            </span>
+          </span>
         </Link>
 
         {/* Desktop nav */}
@@ -30,7 +48,7 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
                 key={item.href}
                 href={item.href}
                 aria-current={active ? "page" : undefined}
-                className={`text-sm font-medium transition-colors ${
+                className={`nav-link text-sm font-medium ${
                   active ? "text-forest" : "text-ink/80 hover:text-forest"
                 }`}
               >

@@ -2,6 +2,8 @@ import Link from "next/link";
 import { Section } from "@/components/ui/Section";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { Reveal } from "@/components/ui/Reveal";
+import { CrossMark } from "@/components/brand/CrossMark";
 import {
   getAnnouncements,
   getFeaturedStory,
@@ -27,9 +29,18 @@ export default async function HomePage() {
   return (
     <>
       {/* Hero */}
-      <Section tone="forest">
-        <div className="grid items-center gap-10 lg:grid-cols-2">
+      <Section tone="forest" className="relative overflow-hidden">
+        <CrossMark
+          animated
+          color="#ffffff"
+          inner="#0059b5"
+          className="pointer-events-none absolute -right-16 top-1/2 hidden h-[130%] -translate-y-1/2 opacity-[0.07] lg:block"
+        />
+        <div className="relative grid items-center gap-10 lg:grid-cols-2">
           <div>
+            <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-paper-raised/25 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-brass">
+              EECMY · Lafto Mekaneyesus Congregation
+            </p>
             <h1 className="font-serif text-4xl font-bold leading-tight sm:text-5xl">
               A place to belong, a place to grow in faith.
             </h1>
@@ -42,7 +53,7 @@ export default async function HomePage() {
               <Button
                 href="/visit"
                 variant="primary"
-                className="bg-brass hover:bg-brass-dim"
+                className="bg-brass! text-forest-deep! hover:bg-paper-raised!"
               >
                 Plan a Visit
               </Button>
@@ -56,7 +67,7 @@ export default async function HomePage() {
             </div>
           </div>
 
-          <div className="rounded-sm border border-paper-raised/20 bg-paper-raised/5 p-6">
+          <div className="rounded-sm border border-paper-raised/25 bg-paper-raised/10 p-6 backdrop-blur-sm transition duration-300 hover:-translate-y-1 hover:bg-paper-raised/15">
             <p className="text-xs font-semibold uppercase tracking-wide text-brass">
               This Week
             </p>
@@ -91,6 +102,7 @@ export default async function HomePage() {
 
       {/* Latest sermon */}
       <Section>
+        <Reveal>
         <h2 className="text-2xl font-bold text-forest">Latest Message</h2>
         {sermon ? (
           <Card className="mt-6 grid gap-6 sm:grid-cols-[200px_1fr] sm:items-center">
@@ -104,15 +116,9 @@ export default async function HomePage() {
                 {sermon.title}
               </h3>
               {sermon.description && (
-                <p className="mt-2 text-sm text-ink/75">
-                  {excerpt(sermon.description, 160)}
-                </p>
+                <p className="mt-2 text-sm text-ink/75">{excerpt(sermon.description, 160)}</p>
               )}
-              <Button
-                href={`/sermons/${sermon.slug}`}
-                variant="ghost"
-                className="mt-3 px-0"
-              >
+              <Button href={`/sermons/${sermon.slug}`} variant="ghost" className="mt-3 px-0">
                 Watch this message →
               </Button>
             </div>
@@ -122,16 +128,15 @@ export default async function HomePage() {
             No sermons published yet — check back soon.
           </p>
         )}
+        </Reveal>
       </Section>
 
       {/* Upcoming events */}
       <Section tone="raised">
+        <Reveal>
         <div className="flex items-baseline justify-between">
           <h2 className="text-2xl font-bold text-forest">Upcoming Events</h2>
-          <Link
-            href="/events"
-            className="text-sm font-medium text-forest underline underline-offset-4"
-          >
+          <Link href="/events" className="text-sm font-medium text-forest underline underline-offset-4">
             View all →
           </Link>
         </div>
@@ -164,11 +169,13 @@ export default async function HomePage() {
             No upcoming events posted right now — check back soon.
           </p>
         )}
+        </Reveal>
       </Section>
 
       {/* Featured story */}
       {story && (
         <Section>
+          <Reveal>
           <div className="grid gap-8 lg:grid-cols-[1fr_1.4fr] lg:items-center">
             <div className="aspect-video rounded-sm bg-line" />
             <div>
@@ -181,20 +188,18 @@ export default async function HomePage() {
               <p className="prose-body mt-3 text-ink/80">
                 {excerpt(story.body_md, 220)}
               </p>
-              <Button
-                href={`/stories/${story.slug}`}
-                variant="ghost"
-                className="mt-2 px-0"
-              >
+              <Button href={`/stories/${story.slug}`} variant="ghost" className="mt-2 px-0">
                 Read the full story →
               </Button>
             </div>
           </div>
+          </Reveal>
         </Section>
       )}
 
       {/* Closing CTA */}
       <Section tone="forest" className="text-center">
+        <Reveal>
         <h2 className="font-serif text-2xl font-bold sm:text-3xl">
           New here? We&apos;d love to meet you.
         </h2>
@@ -204,10 +209,11 @@ export default async function HomePage() {
         <Button
           href="/visit"
           variant="primary"
-          className="mt-6 bg-brass hover:bg-brass-dim"
+          className="mt-6 bg-brass! text-forest-deep! hover:bg-paper-raised!"
         >
           Plan Your Visit
         </Button>
+        </Reveal>
       </Section>
     </>
   );
