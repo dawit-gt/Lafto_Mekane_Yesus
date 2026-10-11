@@ -293,6 +293,7 @@ export async function getPublishedPageBySlug(
     return null;
   }
 }
+
 /** Series that have at least one published sermon, for the filter on the Sermons page. */
 export async function getSeriesWithSermons(): Promise<SermonSeries[]> {
   try {
@@ -322,5 +323,30 @@ export async function getSeriesById(id: string | null): Promise<SermonSeries | n
   } catch (err) {
     console.error("getSeriesById failed:", err);
     return null;
+  }
+}
+
+/** Published sermons linked to an event (newest first). */
+export async function getEventSermons(eventId: string): Promise<Sermon[]> {
+  try {
+    const supabase = await createClient();
+    const { data: links, error: linkError } = await supabase
+      .from("event_sermons")
+      .select("sermon_id")
+      .eq("event_id", eventId);
+    if (linkError) throw linkError;
+    const ids = (links ?? []).map((row) => row.sermon_id);
+    if (ids.length === 0) return [];
+    const { data, error } = await supabase
+      .from("sermons")
+      .select("*")
+      .eq("status", "published")
+      .in("id", ids)
+      .order("sermon_date", { ascending: false });
+    if (error) throw error;
+    return data ?? [];
+  } catch (err) {
+    console.error("getEventSermons failed:", err);
+    return [];
   }
 }

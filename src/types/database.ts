@@ -45,6 +45,12 @@ export interface Database {
         Update: Partial<Database["public"]["Tables"]["sermon_series"]["Row"]>;
         Relationships: [];
       };
+      event_sermons: {
+        Row: { event_id: string; sermon_id: string };
+        Insert: { event_id: string; sermon_id: string };
+        Update: Partial<{ event_id: string; sermon_id: string }>;
+        Relationships: [];
+      };
       sermons: {
         Row: { id: string; slug: string; title: string; description: string | null; speaker: string; scripture: string | null; series_id: string | null; sermon_date: string; thumbnail_url: string | null; video_url: string | null; audio_url: string | null; status: ContentStatus; created_at: string; updated_at: string };
         Insert: Partial<Database["public"]["Tables"]["sermons"]["Row"]> & { slug: string; title: string; speaker: string; sermon_date: string };
@@ -82,7 +88,8 @@ export interface Database {
         Relationships: [];
       };
       members: {
-        Row: { id: string; auth_user_id: string | null; full_name: string; phone: string | null; marital_status: "married" | "not_married" | null; occupation: string | null; children_count: number | null; photo_path: string | null; membership_status: "active" | "inactive"; ministry_ids: string[]; directory_visible: boolean; created_at: string; updated_at: string };        Insert: Partial<Database["public"]["Tables"]["members"]["Row"]> & { full_name: string };
+        Row: { id: string; auth_user_id: string | null; full_name: string; phone: string | null; marital_status: "married" | "not_married" | null; occupation: string | null; children_count: number | null; photo_path: string | null; membership_status: "active" | "inactive"; ministry_ids: string[]; directory_visible: boolean; created_at: string; updated_at: string };
+        Insert: Partial<Database["public"]["Tables"]["members"]["Row"]> & { full_name: string };
         Update: Partial<Database["public"]["Tables"]["members"]["Row"]>;
         Relationships: [];
       };

@@ -239,7 +239,6 @@ export async function getAdminAnnouncementById(
   }
 }
 
-
 // ---------------------------------------------------------------------
 // Pages
 // ---------------------------------------------------------------------
@@ -380,5 +379,40 @@ export async function getAdminSeriesById(id: string): Promise<SermonSeries | nul
   } catch (err) {
     console.error("getAdminSeriesById failed:", err);
     return null;
+  }
+}
+
+// ---------------------------------------------------------------------
+// Event <-> sermon links
+// ---------------------------------------------------------------------
+/** The latest sermons, for the "Messages at this event" tick-list in the event form. */
+export async function getSermonPickerOptions(): Promise<SelectOption[]> {
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("sermons")
+      .select("id, title, sermon_date")
+      .order("sermon_date", { ascending: false })
+      .limit(100);
+    if (error) throw error;
+    return (data ?? []).map((row) => ({ id: row.id, label: `${row.title} (${row.sermon_date})` }));
+  } catch (err) {
+    console.error("getSermonPickerOptions failed:", err);
+    return [];
+  }
+}
+
+export async function getEventSermonIds(eventId: string): Promise<string[]> {
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("event_sermons")
+      .select("sermon_id")
+      .eq("event_id", eventId);
+    if (error) throw error;
+    return (data ?? []).map((row) => row.sermon_id);
+  } catch (err) {
+    console.error("getEventSermonIds failed:", err);
+    return [];
   }
 }

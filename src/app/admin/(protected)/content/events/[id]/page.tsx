@@ -1,7 +1,13 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { EventForm } from "@/components/admin/EventForm";
-import { getAdminEventById, getLocationOptions, getMinistryOptions } from "@/lib/data/admin-content";
+import {
+  getAdminEventById,
+  getEventSermonIds,
+  getLocationOptions,
+  getMinistryOptions,
+  getSermonPickerOptions,
+} from "@/lib/data/admin-content";
 
 export const metadata: Metadata = {
   title: "Edit Event",
@@ -14,10 +20,12 @@ interface Props {
 
 export default async function EditEventPage({ params }: Props) {
   const { id } = await params;
-  const [event, locationOptions, ministryOptions] = await Promise.all([
+  const [event, locationOptions, ministryOptions, sermonOptions, selectedSermonIds] = await Promise.all([
     getAdminEventById(id),
     getLocationOptions(),
     getMinistryOptions(),
+    getSermonPickerOptions(),
+    getEventSermonIds(id),
   ]);
 
   if (!event) notFound();
@@ -26,7 +34,13 @@ export default async function EditEventPage({ params }: Props) {
     <div>
       <h1 className="text-2xl font-bold text-forest">Edit Event</h1>
       <div className="mt-6">
-        <EventForm event={event} locationOptions={locationOptions} ministryOptions={ministryOptions} />
+        <EventForm
+          event={event}
+          locationOptions={locationOptions}
+          ministryOptions={ministryOptions}
+          sermonOptions={sermonOptions}
+          selectedSermonIds={selectedSermonIds}
+        />
       </div>
     </div>
   );

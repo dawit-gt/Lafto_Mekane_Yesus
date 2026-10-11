@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useActionState } from "react";
@@ -17,6 +16,8 @@ interface EventFormProps {
   event?: Event;
   locationOptions: SelectOption[];
   ministryOptions: SelectOption[];
+  sermonOptions: SelectOption[];
+  selectedSermonIds?: string[];
 }
 
 /** Fills the Slug field from whatever is currently in the Title field. */
@@ -28,7 +29,13 @@ function fillSlugFromTitle() {
   }
 }
 
-export function EventForm({ event, locationOptions, ministryOptions }: EventFormProps) {
+export function EventForm({
+  event,
+  locationOptions,
+  ministryOptions,
+  sermonOptions,
+  selectedSermonIds = [],
+}: EventFormProps) {
   const isEdit = !!event;
   const action = isEdit ? updateEvent.bind(null, event.id) : createEvent;
   const [state, formAction] = useActionState(action, initialFormState);
@@ -117,6 +124,29 @@ export function EventForm({ event, locationOptions, ministryOptions }: EventForm
         options={ministryOptions.map((o) => ({ value: o.id, label: o.label }))}
         errors={state.fieldErrors?.ministryId}
       />
+
+      {sermonOptions.length > 0 && (
+        <fieldset>
+          <legend className="text-sm font-medium text-ink">Messages at this event (optional)</legend>
+          <p className="mt-1 text-xs text-ink/60">
+            Tick the sermons that were preached here. They are listed on the event page.
+          </p>
+          <div className="mt-2 max-h-56 space-y-1 overflow-y-auto rounded-sm border border-line bg-paper-raised p-3">
+            {sermonOptions.map((option) => (
+              <label key={option.id} className="flex items-start gap-2 text-sm text-ink/85">
+                <input
+                  type="checkbox"
+                  name="sermonIds"
+                  value={option.id}
+                  defaultChecked={selectedSermonIds.includes(option.id)}
+                  className="mt-1"
+                />
+                <span>{option.label}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+      )}
 
       <TextField
         label="Registration Link (optional)"

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { EventForm } from "@/components/admin/EventForm";
-import { getLocationOptions, getMinistryOptions } from "@/lib/data/admin-content";
+import { getLocationOptions, getMinistryOptions, getSermonPickerOptions } from "@/lib/data/admin-content";
 
 export const metadata: Metadata = {
   title: "New Event",
@@ -8,16 +8,21 @@ export const metadata: Metadata = {
 };
 
 export default async function NewEventPage() {
-  const [locationOptions, ministryOptions] = await Promise.all([
+  const [locationOptions, ministryOptions, sermonOptions] = await Promise.all([
     getLocationOptions(),
     getMinistryOptions(),
+    getSermonPickerOptions(),
   ]);
 
   return (
     <div>
       <h1 className="text-2xl font-bold text-forest">New Event</h1>
       <div className="mt-6">
-        <EventForm locationOptions={locationOptions} ministryOptions={ministryOptions} />
+        <EventForm
+          locationOptions={locationOptions}
+          ministryOptions={ministryOptions}
+          sermonOptions={sermonOptions}
+        />
       </div>
     </div>
   );

@@ -23,6 +23,7 @@ const eventSchema = z.object({
   ministryId: z.string().uuid().optional().or(z.literal("")),
   registrationUrl: z.string().trim().url("Enter a valid URL.").optional().or(z.literal("")),
   imageUrl: z.string().trim().url("Invalid picture link.").optional().or(z.literal("")),
+  sermonIds: z.array(z.string().uuid()).max(100),
   status: z.enum(["draft", "published", "archived"]),
 });
 
@@ -46,6 +47,21 @@ async function logAudit(
   });
 }
 
+/** Makes the event's linked sermons exactly match the ticked list. */
+async function syncEventSermons(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  eventId: string,
+  sermonIds: string[]
+) {
+  const { error: deleteError } = await supabase.from("event_sermons").delete().eq("event_id", eventId);
+  if (deleteError) throw deleteError;
+  if (sermonIds.length === 0) return;
+  const { error: insertError } = await supabase
+    .from("event_sermons")
+    .insert(sermonIds.map((sermonId) => ({ event_id: eventId, sermon_id: sermonId })));
+  if (insertError) throw insertError;
+}
+
 function parseEventForm(formData: FormData) {
   return eventSchema.safeParse({
     title: formData.get("title"),
@@ -58,6 +74,7 @@ function parseEventForm(formData: FormData) {
     ministryId: formData.get("ministryId"),
     registrationUrl: formData.get("registrationUrl"),
     imageUrl: formData.get("imageUrl") ?? "",
+    sermonIds: formData.getAll("sermonIds"),
     status: formData.get("status"),
   });
 }
@@ -91,6 +108,7 @@ export async function createEvent(_prevState: FormState, formData: FormData): Pr
 
     if (error) throw error;
 
+    await syncEventSermons(supabase, data.id, d.sermonIds);
     await logAudit(supabase, "create", data.id, { title: d.title, status: d.status });
   } catch (err) {
     console.error("createEvent failed:", err);
@@ -134,6 +152,7 @@ export async function updateEvent(
 
     if (error) throw error;
 
+    await syncEventSermons(supabase, id, d.sermonIds);
     await logAudit(supabase, "update", id, { title: d.title, status: d.status });
   } catch (err) {
     console.error("updateEvent failed:", err);
