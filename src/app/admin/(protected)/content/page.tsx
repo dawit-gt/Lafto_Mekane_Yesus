@@ -10,6 +10,7 @@ export const metadata: Metadata = {
 const sections = [
   { label: "Events", href: "/admin/content/events", blurb: "Services, gatherings, and special days." },
   { label: "Sermons", href: "/admin/content/sermons", blurb: "Messages with video or audio." },
+  { label: "Sermon Series", href: "/admin/content/series", blurb: "Group sermons into a series, e.g. a book of the Bible." },
   { label: "Ministries", href: "/admin/content/ministries", blurb: "Groups people can join or serve in." },
   { label: "Stories", href: "/admin/content/stories", blurb: "Testimonies and community highlights." },
   { label: "Announcements", href: "/admin/content/announcements", blurb: "Time-limited notices." },

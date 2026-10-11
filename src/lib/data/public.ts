@@ -8,6 +8,7 @@ import type {
   Ministry,
   Page,
   Sermon,
+  SermonSeries,
   Story,
 } from "@/types/database";
 
@@ -40,11 +41,12 @@ export async function getLatestSermon(): Promise<Sermon | null> {
   }
 }
 
-export async function getSermons(limit = 24): Promise<Sermon[]> {
+export async function getSermons(limit = 24, seriesId?: string): Promise<Sermon[]> {
   try {
     const supabase = await createClient();
-    const { data, error } = await supabase
-      .from("sermons").select("*").eq("status", "published")
+    let query = supabase.from("sermons").select("*").eq("status", "published");
+    if (seriesId) query = query.eq("series_id", seriesId);
+    const { data, error } = await query
       .order("sermon_date", { ascending: false }).limit(limit);
     if (error) throw error;
     return data ?? [];
@@ -288,6 +290,37 @@ export async function getPublishedPageBySlug(
     return data;
   } catch (err) {
     console.error("getPublishedPageBySlug failed:", err);
+    return null;
+  }
+}
+/** Series that have at least one published sermon, for the filter on the Sermons page. */
+export async function getSeriesWithSermons(): Promise<SermonSeries[]> {
+  try {
+    const supabase = await createClient();
+    const [seriesRes, sermonsRes] = await Promise.all([
+      supabase.from("sermon_series").select("*").order("title"),
+      supabase.from("sermons").select("series_id").eq("status", "published").not("series_id", "is", null),
+    ]);
+    if (seriesRes.error) throw seriesRes.error;
+    if (sermonsRes.error) throw sermonsRes.error;
+    const used = new Set((sermonsRes.data ?? []).map((row) => row.series_id));
+    return (seriesRes.data ?? []).filter((item) => used.has(item.id));
+  } catch (err) {
+    console.error("getSeriesWithSermons failed:", err);
+    return [];
+  }
+}
+
+export async function getSeriesById(id: string | null): Promise<SermonSeries | null> {
+  if (!id) return null;
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("sermon_series").select("*").eq("id", id).maybeSingle();
+    if (error) throw error;
+    return data;
+  } catch (err) {
+    console.error("getSeriesById failed:", err);
     return null;
   }
 }

@@ -133,6 +133,7 @@ export interface Database {
 }
 
 export type Event = Database["public"]["Tables"]["events"]["Row"];
+export type SermonSeries = Database["public"]["Tables"]["sermon_series"]["Row"];
 export type Sermon = Database["public"]["Tables"]["sermons"]["Row"];
 export type Ministry = Database["public"]["Tables"]["ministries"]["Row"];
 export type Story = Database["public"]["Tables"]["stories"]["Row"];

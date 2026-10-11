@@ -100,6 +100,7 @@ export function SermonForm({ sermon, seriesOptions }: SermonFormProps) {
           defaultValue={sermon?.series_id ?? ""}
           emptyOptionLabel="No series"
           options={seriesOptions.map((o) => ({ value: o.id, label: o.label }))}
+          hint="Create series under Content → Sermon Series."
           errors={state.fieldErrors?.seriesId}
         />
       </div>

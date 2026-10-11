@@ -8,6 +8,7 @@ import type {
   Ministry,
   Page,
   Sermon,
+  SermonSeries,
   Story,
 } from "@/types/database";
 
@@ -350,6 +351,34 @@ export async function getAdminFaqById(id: string): Promise<Faq | null> {
     return data;
   } catch (err) {
     console.error("getAdminFaqById failed:", err);
+    return null;
+  }
+}
+
+// ---------------------------------------------------------------------
+// Sermon series
+// ---------------------------------------------------------------------
+export async function getAdminSeries(): Promise<SermonSeries[]> {
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase.from("sermon_series").select("*").order("title");
+    if (error) throw error;
+    return data ?? [];
+  } catch (err) {
+    console.error("getAdminSeries failed:", err);
+    return [];
+  }
+}
+
+export async function getAdminSeriesById(id: string): Promise<SermonSeries | null> {
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("sermon_series").select("*").eq("id", id).maybeSingle();
+    if (error) throw error;
+    return data;
+  } catch (err) {
+    console.error("getAdminSeriesById failed:", err);
     return null;
   }
 }
