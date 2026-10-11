@@ -85,6 +85,14 @@ export default async function EventDetailPage({ params }: Props) {
               )}
             </dl>
 
+            <Button
+              href={`/events/${event.slug}/calendar.ics`}
+              variant="secondary"
+              className="mt-4 w-full"
+            >
+              Add to calendar
+            </Button>
+
             {event.registration_url && (
               <Button
                 href={event.registration_url}
