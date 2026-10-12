@@ -37,6 +37,23 @@ export default async function ContactPage() {
             <p className="mt-3 text-sm text-ink/70">
               We typically respond within a few business days.
             </p>
+
+            {telegramUrl && (
+              <Card className="mt-6">
+                <h3 className="font-semibold text-forest">Join our Telegram group</h3>
+                <p className="mt-2 text-sm text-ink/75">
+                  For news, announcements and fellowship, join the church Telegram group.
+                </p>
+                <a
+                  href={telegramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-4 inline-flex items-center justify-center rounded-sm bg-forest px-5 py-2.5 text-sm font-semibold tracking-wide text-paper-raised transition-colors hover:bg-forest-deep"
+                >
+                  Open Telegram group
+                </a>
+              </Card>
+            )}
           </div>
           <ContactForm />
         </div>
