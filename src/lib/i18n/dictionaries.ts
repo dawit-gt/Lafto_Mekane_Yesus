@@ -28,6 +28,7 @@ const en = {
     openMenu: "Open menu",
     closeMenu: "Close menu",
     switchLanguage: "Language",
+    search: "Search",
   },
   footer: {
     explore: "Explore",
@@ -74,6 +75,7 @@ const am: Dictionary = {
     openMenu: "ምናሌ ክፈት",
     closeMenu: "ምናሌ ዝጋ",
     switchLanguage: "ቋንቋ",
+    search: "ፈልግ",
   },
   footer: {
     explore: "ያስሱ",

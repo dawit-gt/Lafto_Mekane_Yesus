@@ -59,6 +59,16 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
         </nav>
 
         <div className="hidden items-center gap-4 lg:flex">
+          <Link
+            href="/search"
+            aria-label={dict.header.search}
+            className="rounded-full p-2 text-ink/70 transition hover:bg-paper hover:text-forest"
+          >
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <circle cx="9" cy="9" r="5.5" stroke="currentColor" strokeWidth="1.8" />
+              <path d="M13.5 13.5L17 17" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+            </svg>
+          </Link>
           <LanguageSwitch locale={locale} label={dict.header.switchLanguage} />
           <Button href="/contact" variant="primary" className="text-xs">
             {dict.header.visitContact}
@@ -101,6 +111,13 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
               </li>
             ))}
           </ul>
+          <Link
+            href="/search"
+            onClick={() => setMenuOpen(false)}
+            className="mt-2 block rounded-sm px-2 py-2.5 text-base font-medium text-ink hover:bg-paper hover:text-forest"
+          >
+            {dict.header.search}
+          </Link>
           <LanguageSwitch locale={locale} label={dict.header.switchLanguage} className="mt-3 px-2" />
         </nav>
       )}
