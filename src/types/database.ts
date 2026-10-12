@@ -118,7 +118,7 @@ export interface Database {
         Relationships: [];
       };
       site_settings: {
-        Row: { id: number; service_times_md: string; default_locale: string; supported_locales: string[]; seo_default_title: string | null; seo_default_description: string | null; updated_at: string };
+        Row: { id: number; service_times_md: string; default_locale: string; supported_locales: string[]; seo_default_title: string | null; seo_default_description: string | null; church_name: string | null; church_name_am: string | null; telegram_group_url: string | null; updated_at: string };
         Insert: Partial<Database["public"]["Tables"]["site_settings"]["Row"]>;
         Update: Partial<Database["public"]["Tables"]["site_settings"]["Row"]>;
         Relationships: [];

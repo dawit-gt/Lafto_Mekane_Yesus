@@ -1,4 +1,3 @@
-
 /**
  * Church-specific details used by the Privacy, Terms and Accessibility pages.
  * Fill these in before launch.
@@ -34,10 +33,15 @@ export const siteConfig = {
 } as const;
 
 /**
- * The Telegram group link, or null if it is empty or is not a Telegram address.
- * Only https://t.me/... and https://telegram.me/... links are accepted.
+ * Returns the link if it is a Telegram address (https://t.me/... or
+ * https://telegram.me/...), otherwise null.
  */
+export function normalizeTelegramUrl(url: string | null | undefined): string | null {
+  const trimmed = (url ?? "").trim();
+  return /^https:\/\/(t|telegram)\.me\/\S+$/i.test(trimmed) ? trimmed : null;
+}
+
+/** The Telegram link written in this file (the fallback when Admin -> Settings has none). */
 export function getTelegramGroupUrl(): string | null {
-  const url = siteConfig.telegramGroupUrl.trim();
-  return /^https:\/\/(t|telegram)\.me\/\S+$/i.test(url) ? url : null;
+  return normalizeTelegramUrl(siteConfig.telegramGroupUrl);
 }

@@ -41,17 +41,18 @@ export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();
   const title = settings?.seo_default_title?.trim() || fallbackTitle;
   const description = settings?.seo_default_description?.trim() || fallbackDescription;
+  const churchName = settings?.church_name?.trim() || fallbackTitle;
 
   return {
     metadataBase: new URL(siteUrl),
     title: {
       default: title,
-      template: "%s | EECMY Lafto Mekaneyesus",
+      template: `%s | ${churchName}`,
     },
     description,
     openGraph: {
       type: "website",
-      siteName: "EECMY Lafto Mekaneyesus Congregation",
+      siteName: churchName,
     },
   };
 }

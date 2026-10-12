@@ -1,4 +1,6 @@
+import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
+import { getTelegramGroupUrl, normalizeTelegramUrl } from "@/lib/site-config";
 import type {
   Announcement,
   Event,
@@ -181,7 +183,8 @@ export async function getAnnouncements(): Promise<Announcement[]> {
   }
 }
 
-export async function getSiteSettings() {
+// cache() lets the header, footer and page metadata share one database read per request.
+export const getSiteSettings = cache(async () => {
   try {
     const supabase = await createClient();
     const { data, error } = await supabase
@@ -192,6 +195,12 @@ export async function getSiteSettings() {
     console.error("getSiteSettings failed:", err);
     return null;
   }
+});
+
+/** The church Telegram group link: Admin -> Settings first, then site-config.ts. */
+export async function getTelegramUrl(): Promise<string | null> {
+  const settings = await getSiteSettings();
+  return normalizeTelegramUrl(settings?.telegram_group_url) ?? getTelegramGroupUrl();
 }
 
 export async function getLeaders(): Promise<Leader[]> {

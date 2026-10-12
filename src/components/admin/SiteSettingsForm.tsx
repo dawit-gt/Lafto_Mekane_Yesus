@@ -28,6 +28,30 @@ export function SiteSettingsForm({ settings }: { settings: SiteSettings }) {
       />
 
       <TextField
+        label="Church Name (English)"
+        name="churchName"
+        defaultValue={settings.church_name ?? undefined}
+        hint="Shown in the header, footer and browser tab. Leave empty to use the standard name, Lafto Mekaneyesus."
+        errors={state.fieldErrors?.churchName}
+      />
+
+      <TextField
+        label="Church Name (Amharic)"
+        name="churchNameAm"
+        defaultValue={settings.church_name_am ?? undefined}
+        hint="Shown instead when a visitor switches the site to Amharic. Leave empty to use the standard Amharic name."
+        errors={state.fieldErrors?.churchNameAm}
+      />
+
+      <TextField
+        label="Telegram Group Link"
+        name="telegramGroupUrl"
+        defaultValue={settings.telegram_group_url ?? undefined}
+        hint="For example https://t.me/+AbCdEfGh123. It appears in the footer and on the Contact page. Leave empty to hide the Telegram links."
+        errors={state.fieldErrors?.telegramGroupUrl}
+      />
+
+      <TextField
         label="Default Page Title (SEO)"
         name="seoDefaultTitle"
         defaultValue={settings.seo_default_title ?? undefined}

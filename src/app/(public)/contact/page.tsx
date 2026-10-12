@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { ContactForm } from "@/components/forms/ContactForm";
 import { VolunteerForm } from "@/components/forms/VolunteerForm";
 import { ChurchMap } from "@/components/ui/ChurchMap";
-import { getGivingSettings, getPrimaryLocation } from "@/lib/data/public";
+import { getGivingSettings, getPrimaryLocation, getTelegramUrl } from "@/lib/data/public";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -13,7 +13,11 @@ export const metadata: Metadata = {
 };
 
 export default async function ContactPage() {
-  const [location, giving] = await Promise.all([getPrimaryLocation(), getGivingSettings()]);
+  const [location, giving, telegramUrl] = await Promise.all([
+    getPrimaryLocation(),
+    getGivingSettings(),
+    getTelegramUrl(),
+  ]);
 
   return (
     <>

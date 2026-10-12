@@ -3,12 +3,24 @@
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { normalizeTelegramUrl } from "@/lib/site-config";
 import type { FormState } from "@/lib/actions/state";
 
 const siteSettingsSchema = z.object({
   serviceTimesMd: z.string().trim().max(1000).optional().or(z.literal("")),
   seoDefaultTitle: z.string().trim().max(120).optional().or(z.literal("")),
   seoDefaultDescription: z.string().trim().max(300).optional().or(z.literal("")),
+  churchName: z.string().trim().max(80).optional().or(z.literal("")),
+  churchNameAm: z.string().trim().max(80).optional().or(z.literal("")),
+  telegramGroupUrl: z
+    .string()
+    .trim()
+    .max(300)
+    .refine(
+      (v) => v === "" || normalizeTelegramUrl(v) !== null,
+      "Enter a Telegram link that starts with https://t.me/"
+    )
+    .optional(),
 });
 
 const givingSettingsSchema = z
@@ -57,6 +69,9 @@ export async function updateSiteSettings(
     serviceTimesMd: formData.get("serviceTimesMd"),
     seoDefaultTitle: formData.get("seoDefaultTitle"),
     seoDefaultDescription: formData.get("seoDefaultDescription"),
+    churchName: formData.get("churchName"),
+    churchNameAm: formData.get("churchNameAm"),
+    telegramGroupUrl: formData.get("telegramGroupUrl") ?? "",
   });
 
   if (!parsed.success) {
@@ -82,6 +97,9 @@ export async function updateSiteSettings(
         service_times_md: d.serviceTimesMd || "",
         seo_default_title: d.seoDefaultTitle || null,
         seo_default_description: d.seoDefaultDescription || null,
+        church_name: d.churchName || null,
+        church_name_am: d.churchNameAm || null,
+        telegram_group_url: d.telegramGroupUrl || null,
       })
       .eq("id", 1)
       .select("id");

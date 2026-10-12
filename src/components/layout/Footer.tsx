@@ -1,13 +1,12 @@
 import Link from "next/link";
 import { secondaryNav, legalNav } from "@/lib/nav";
-import { getSiteSettings } from "@/lib/data/public";
+import { getSiteSettings, getTelegramUrl } from "@/lib/data/public";
 import { getDictionary } from "@/lib/i18n/server";
-import { getTelegramGroupUrl } from "@/lib/site-config";
 import { Logo } from "@/components/brand/Logo";
 
 export async function Footer() {
   const { dict } = await getDictionary();
-  const telegramUrl = getTelegramGroupUrl();
+  const telegramUrl = await getTelegramUrl();
   const settings = await getSiteSettings();
   const serviceTimes =
     settings?.service_times_md?.trim() || dict.footer.defaultServiceTimes;
