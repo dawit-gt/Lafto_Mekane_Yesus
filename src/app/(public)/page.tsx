@@ -11,6 +11,7 @@ import {
   getSiteSettings,
   getUpcomingEvents,
 } from "@/lib/data/public";
+import { getLocale } from "@/lib/i18n/server";
 import { excerpt, formatEventDateTime } from "@/lib/utils/format";
 
 export default async function HomePage() {
@@ -22,6 +23,18 @@ export default async function HomePage() {
     getSiteSettings(),
   ]);
 
+  const locale = await getLocale();
+  const pick = (english: string | null | undefined, amharic: string | null | undefined) =>
+    (locale === "am" ? amharic?.trim() : "") || english?.trim() || "";
+
+  const heroImage = settings?.hero_image_url || null;
+  const heroTitle =
+    pick(settings?.hero_title, settings?.hero_title_am) ||
+    "A place to belong, a place to grow in faith.";
+  const heroText =
+    pick(settings?.hero_text, settings?.hero_text_am) ||
+    "Lafto Mekaneyesus is a congregation of the Ethiopian Evangelical Church Mekane Yesus, welcoming everyone — near or far — into worship, community, and service.";
+
   const serviceTimes =
     settings?.service_times_md?.trim() ||
     "Sunday Worship — 8:00 AM & 10:30 AM\nWednesday Prayer — 6:00 PM";
@@ -30,24 +43,38 @@ export default async function HomePage() {
     <>
       {/* Hero */}
       <Section tone="forest" className="relative overflow-hidden">
-        <CrossMark
-          animated
-          color="#ffffff"
-          inner="#0059b5"
-          className="pointer-events-none absolute -right-16 top-1/2 hidden h-[130%] -translate-y-1/2 opacity-[0.07] lg:block"
-        />
+        {heroImage ? (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={heroImage}
+              alt=""
+              fetchPriority="high"
+              className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+            />
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 bg-gradient-to-r from-forest-deep/95 via-forest-deep/80 to-forest/55"
+            />
+          </>
+        ) : (
+          <CrossMark
+            animated
+            color="#ffffff"
+            inner="#0059b5"
+            className="pointer-events-none absolute -right-16 top-1/2 hidden h-[130%] -translate-y-1/2 opacity-[0.07] lg:block"
+          />
+        )}
         <div className="relative grid items-center gap-10 lg:grid-cols-2">
           <div>
             <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-paper-raised/25 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-brass">
               EECMY · Lafto Mekaneyesus Congregation
             </p>
             <h1 className="font-serif text-4xl font-bold leading-tight sm:text-5xl">
-              A place to belong, a place to grow in faith.
+              {heroTitle}
             </h1>
-            <p className="mt-5 max-w-lg text-paper-raised/85">
-              Lafto Mekaneyesus is a congregation of the Ethiopian Evangelical
-              Church Mekane Yesus, welcoming everyone — near or far — into
-              worship, community, and service.
+            <p className="mt-5 max-w-lg whitespace-pre-line text-paper-raised/85">
+              {heroText}
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <Button

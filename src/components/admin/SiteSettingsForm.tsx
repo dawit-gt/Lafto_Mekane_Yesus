@@ -6,6 +6,7 @@ import { initialFormState } from "@/lib/actions/state";
 import { TextField, TextAreaField } from "@/components/ui/Field";
 import { SubmitButton } from "@/components/ui/SubmitButton";
 import { FormStatusBanner } from "@/components/forms/FormStatusBanner";
+import { ImageUploadField } from "@/components/admin/ImageUploadField";
 import type { SiteSettings } from "@/types/database";
 
 export function SiteSettingsForm({ settings }: { settings: SiteSettings }) {
@@ -26,6 +27,52 @@ export function SiteSettingsForm({ settings }: { settings: SiteSettings }) {
         hint="Each line appears on its own line, e.g. Sunday Worship — 8:00 AM & 10:30 AM"
         errors={state.fieldErrors?.serviceTimesMd}
       />
+
+      <fieldset className="space-y-5 rounded-sm border border-line p-4">
+        <legend className="px-2 text-sm font-semibold text-forest">Home page banner</legend>
+
+        <ImageUploadField
+          label="Banner picture (optional)"
+          name="heroImageUrl"
+          defaultValue={settings.hero_image_url}
+          hint="A wide photo of the church or congregation works best. It is shown behind the banner text with a blue tint so the words stay readable."
+          errors={state.fieldErrors?.heroImageUrl}
+        />
+
+        <TextField
+          label="Banner Heading (English)"
+          name="heroTitle"
+          defaultValue={settings.hero_title ?? undefined}
+          hint="Leave empty to use: A place to belong, a place to grow in faith."
+          errors={state.fieldErrors?.heroTitle}
+        />
+
+        <TextAreaField
+          label="Banner Text (English)"
+          name="heroText"
+          rows={3}
+          defaultValue={settings.hero_text ?? undefined}
+          hint="One or two sentences under the heading. Leave empty to use the standard text."
+          errors={state.fieldErrors?.heroText}
+        />
+
+        <TextField
+          label="Banner Heading (Amharic)"
+          name="heroTitleAm"
+          defaultValue={settings.hero_title_am ?? undefined}
+          hint="Shown when a visitor switches to Amharic. If empty, the English heading is shown."
+          errors={state.fieldErrors?.heroTitleAm}
+        />
+
+        <TextAreaField
+          label="Banner Text (Amharic)"
+          name="heroTextAm"
+          rows={3}
+          defaultValue={settings.hero_text_am ?? undefined}
+          hint="If empty, the English text is shown."
+          errors={state.fieldErrors?.heroTextAm}
+        />
+      </fieldset>
 
       <TextField
         label="Church Name (English)"
