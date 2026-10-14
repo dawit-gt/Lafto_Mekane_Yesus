@@ -4,33 +4,61 @@ import { useActionState } from "react";
 import { updateSiteSettings } from "@/lib/actions/admin-settings";
 import { initialFormState } from "@/lib/actions/state";
 import { TextField, TextAreaField } from "@/components/ui/Field";
+import { ImageUploadField } from "@/components/admin/ImageUploadField";
 import { SubmitButton } from "@/components/ui/SubmitButton";
 import { FormStatusBanner } from "@/components/forms/FormStatusBanner";
-import { ImageUploadField } from "@/components/admin/ImageUploadField";
 import type { SiteSettings } from "@/types/database";
 
-export function SiteSettingsForm({ settings }: { settings: SiteSettings }) {
-  const [state, formAction] = useActionState(
-    updateSiteSettings,
-    initialFormState
-  );
+export type SiteTab = "general" | "home" | "about" | "seo";
+
+/**
+ * One form with all the site settings, shown a tab at a time. Every tab's fields
+ * stay in the page (the other tabs are only hidden), so Save always sends everything
+ * and nothing is lost when you move between tabs.
+ */
+export function SiteSettingsForm({ settings, tab }: { settings: SiteSettings; tab: SiteTab }) {
+  const [state, formAction] = useActionState(updateSiteSettings, initialFormState);
 
   return (
     <form action={formAction} className="space-y-5">
       <FormStatusBanner state={state} />
 
-      <TextAreaField
-        label="Service Times"
-        name="serviceTimesMd"
-        rows={4}
-        defaultValue={settings.service_times_md}
-        hint="Each line appears on its own line, e.g. Sunday Worship — 8:00 AM & 10:30 AM"
-        errors={state.fieldErrors?.serviceTimesMd}
-      />
+      <div hidden={tab !== "general"} className="space-y-5">
+        <TextAreaField
+          label="Service Times"
+          name="serviceTimesMd"
+          rows={4}
+          defaultValue={settings.service_times_md}
+          hint="Each line appears on its own line, e.g. Sunday Worship — 8:00 AM & 10:30 AM"
+          errors={state.fieldErrors?.serviceTimesMd}
+        />
 
-      <fieldset className="space-y-5 rounded-sm border border-line p-4">
-        <legend className="px-2 text-sm font-semibold text-forest">Home page banner</legend>
+        <TextField
+          label="Church Name (English)"
+          name="churchName"
+          defaultValue={settings.church_name ?? undefined}
+          hint="Shown in the header, footer and browser tab. Leave empty to use the standard name, Lafto Mekaneyesus."
+          errors={state.fieldErrors?.churchName}
+        />
 
+        <TextField
+          label="Church Name (Amharic)"
+          name="churchNameAm"
+          defaultValue={settings.church_name_am ?? undefined}
+          hint="Shown instead when a visitor switches the site to Amharic. Leave empty to use the standard Amharic name."
+          errors={state.fieldErrors?.churchNameAm}
+        />
+
+        <TextField
+          label="Telegram Group Link"
+          name="telegramGroupUrl"
+          defaultValue={settings.telegram_group_url ?? undefined}
+          hint="For example https://t.me/+AbCdEfGh123. It appears in the footer and on the Contact page. Leave empty to hide the Telegram links."
+          errors={state.fieldErrors?.telegramGroupUrl}
+        />
+      </div>
+
+      <div hidden={tab !== "home"} className="space-y-5">
         <ImageUploadField
           label="Banner picture (optional)"
           name="heroImageUrl"
@@ -72,48 +100,79 @@ export function SiteSettingsForm({ settings }: { settings: SiteSettings }) {
           hint="If empty, the English text is shown."
           errors={state.fieldErrors?.heroTextAm}
         />
-      </fieldset>
+      </div>
 
-      <TextField
-        label="Church Name (English)"
-        name="churchName"
-        defaultValue={settings.church_name ?? undefined}
-        hint="Shown in the header, footer and browser tab. Leave empty to use the standard name, Lafto Mekaneyesus."
-        errors={state.fieldErrors?.churchName}
-      />
+      <div hidden={tab !== "about"} className="space-y-5">
+        <p className="text-xs text-ink/60">
+          Leave a box empty to keep the standard text. You can use **bold**, *italic* and
+          [links](https://example.org) in Mission and Denomination.
+        </p>
 
-      <TextField
-        label="Church Name (Amharic)"
-        name="churchNameAm"
-        defaultValue={settings.church_name_am ?? undefined}
-        hint="Shown instead when a visitor switches the site to Amharic. Leave empty to use the standard Amharic name."
-        errors={state.fieldErrors?.churchNameAm}
-      />
+        <TextAreaField
+          label="About Us (English)"
+          name="aboutIntro"
+          rows={3}
+          defaultValue={settings.about_intro ?? undefined}
+          hint="The short introduction in the blue banner at the top."
+          errors={state.fieldErrors?.aboutIntro}
+        />
+        <TextAreaField
+          label="Our Mission (English)"
+          name="aboutMission"
+          rows={5}
+          defaultValue={settings.about_mission ?? undefined}
+          errors={state.fieldErrors?.aboutMission}
+        />
+        <TextAreaField
+          label="Our Denomination (English)"
+          name="aboutDenomination"
+          rows={5}
+          defaultValue={settings.about_denomination ?? undefined}
+          errors={state.fieldErrors?.aboutDenomination}
+        />
 
-      <TextField
-        label="Telegram Group Link"
-        name="telegramGroupUrl"
-        defaultValue={settings.telegram_group_url ?? undefined}
-        hint="For example https://t.me/+AbCdEfGh123. It appears in the footer and on the Contact page. Leave empty to hide the Telegram links."
-        errors={state.fieldErrors?.telegramGroupUrl}
-      />
+        <TextAreaField
+          label="About Us (Amharic)"
+          name="aboutIntroAm"
+          rows={3}
+          defaultValue={settings.about_intro_am ?? undefined}
+          hint="Shown in Amharic. If empty, the English text is shown."
+          errors={state.fieldErrors?.aboutIntroAm}
+        />
+        <TextAreaField
+          label="Our Mission (Amharic)"
+          name="aboutMissionAm"
+          rows={5}
+          defaultValue={settings.about_mission_am ?? undefined}
+          errors={state.fieldErrors?.aboutMissionAm}
+        />
+        <TextAreaField
+          label="Our Denomination (Amharic)"
+          name="aboutDenominationAm"
+          rows={5}
+          defaultValue={settings.about_denomination_am ?? undefined}
+          errors={state.fieldErrors?.aboutDenominationAm}
+        />
+      </div>
 
-      <TextField
-        label="Default Page Title (SEO)"
-        name="seoDefaultTitle"
-        defaultValue={settings.seo_default_title ?? undefined}
-        hint="The home page title in browser tabs and Google. About 60 characters works best. Leave empty to use the standard title."
-        errors={state.fieldErrors?.seoDefaultTitle}
-      />
+      <div hidden={tab !== "seo"} className="space-y-5">
+        <TextField
+          label="Default Page Title (SEO)"
+          name="seoDefaultTitle"
+          defaultValue={settings.seo_default_title ?? undefined}
+          hint="The home page title in browser tabs and Google. About 60 characters works best. Leave empty to use the standard title."
+          errors={state.fieldErrors?.seoDefaultTitle}
+        />
 
-      <TextAreaField
-        label="Default Description (SEO)"
-        name="seoDefaultDescription"
-        rows={3}
-        defaultValue={settings.seo_default_description ?? undefined}
-        hint="Shown by search engines and in link previews on Telegram and WhatsApp. About 150 characters works best. Leave empty to use the standard text."
-        errors={state.fieldErrors?.seoDefaultDescription}
-      />
+        <TextAreaField
+          label="Default Description (SEO)"
+          name="seoDefaultDescription"
+          rows={3}
+          defaultValue={settings.seo_default_description ?? undefined}
+          hint="Shown by search engines and in link previews on Telegram and WhatsApp. About 150 characters works best. Leave empty to use the standard text."
+          errors={state.fieldErrors?.seoDefaultDescription}
+        />
+      </div>
 
       <SubmitButton>Save Site Settings</SubmitButton>
     </form>

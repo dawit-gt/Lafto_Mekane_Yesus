@@ -3,7 +3,10 @@ import Link from "next/link";
 import { Section } from "@/components/ui/Section";
 import { Card } from "@/components/ui/Card";
 import { SiteImage } from "@/components/ui/SiteImage";
-import { getLeaders } from "@/lib/data/public";
+import { Markdown } from "@/components/ui/Markdown";
+import { getLeaders, getSiteSettings } from "@/lib/data/public";
+import { getLocale } from "@/lib/i18n/server";
+import { pickLocalized } from "@/lib/i18n/pick";
 
 export const metadata: Metadata = {
   title: "About",
@@ -12,40 +15,41 @@ export const metadata: Metadata = {
 };
 
 export default async function AboutPage() {
-  const leaders = await getLeaders();
+  const [leaders, settings, locale] = await Promise.all([
+    getLeaders(),
+    getSiteSettings(),
+    getLocale(),
+  ]);
+
+  const intro =
+    pickLocalized(locale, settings?.about_intro, settings?.about_intro_am) ||
+    "Lafto Mekaneyesus is a congregation of the Ethiopian Evangelical Church Mekane Yesus (EECMY), rooted in Scripture and committed to worship, discipleship, and service to our community.";
+  const mission =
+    pickLocalized(locale, settings?.about_mission, settings?.about_mission_am) ||
+    "We exist to glorify God by making disciples of Jesus Christ — gathering as a family of faith to worship together, grow in the Word, and serve our neighbors with love.";
+  const denomination =
+    pickLocalized(locale, settings?.about_denomination, settings?.about_denomination_am) ||
+    "The Ethiopian Evangelical Church Mekane Yesus (“Place of Jesus”) is one of the largest Lutheran communions in the world, with a long history of evangelism, education, and community development across Ethiopia and beyond.";
 
   return (
     <>
       <Section tone="forest">
         <h1 className="font-serif text-4xl font-bold">About Us</h1>
-        <p className="mt-4 max-w-2xl text-paper-raised/85">
-          Lafto Mekaneyesus is a congregation of the Ethiopian Evangelical
-          Church Mekane Yesus (EECMY), rooted in Scripture and committed to
-          worship, discipleship, and service to our community.
-        </p>
+        <p className="mt-4 max-w-2xl whitespace-pre-line text-paper-raised/85">{intro}</p>
       </Section>
 
       <Section>
         <div className="grid gap-10 lg:grid-cols-2">
           <div>
             <h2 className="text-2xl font-bold text-forest">Our Mission</h2>
-            <p className="prose-body mt-4 text-ink/80">
-              We exist to glorify God by making disciples of Jesus Christ —
-              gathering as a family of faith to worship together, grow in the
-              Word, and serve our neighbors with love.
-            </p>
+            <Markdown className="mt-4 text-ink/80">{mission}</Markdown>
           </div>
 
           <div>
             <h2 className="text-2xl font-bold text-forest">
               Our Denomination
             </h2>
-            <p className="prose-body mt-4 text-ink/80">
-              The Ethiopian Evangelical Church Mekane Yesus (&ldquo;Place of
-              Jesus&rdquo;) is one of the largest Lutheran communions in the
-              world, with a long history of evangelism, education, and community
-              development across Ethiopia and beyond.
-            </p>
+            <Markdown className="mt-4 text-ink/80">{denomination}</Markdown>
           </div>
         </div>
       </Section>
