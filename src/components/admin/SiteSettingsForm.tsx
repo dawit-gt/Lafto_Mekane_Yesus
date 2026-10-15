@@ -119,6 +119,70 @@ export function SiteSettingsForm({ settings, tab }: { settings: SiteSettings; ta
           hint="If empty, the English text is shown."
           errors={state.fieldErrors?.heroTextAm}
         />
+
+        <div className="space-y-5 border-t border-line pt-5">
+          <div>
+            <p className="text-sm font-medium text-ink">Welcome message</p>
+            <p className="mt-1 text-xs text-ink/60">
+              A welcome note shown under the banner on the Home page, for example from the pastor.
+              It is only shown when the English text below is filled in. You can use **bold**,
+              *italic* and [links](https://example.org).
+            </p>
+          </div>
+
+          <TextField
+            label="Welcome Heading (English)"
+            name="welcomeTitle"
+            defaultValue={settings.welcome_title ?? undefined}
+            hint="Leave empty to use: Welcome"
+            errors={state.fieldErrors?.welcomeTitle}
+          />
+          <TextAreaField
+            label="Welcome Message (English)"
+            name="welcomeText"
+            rows={7}
+            defaultValue={settings.welcome_text ?? undefined}
+            hint="Leave empty to hide the welcome section."
+            errors={state.fieldErrors?.welcomeText}
+          />
+          <TextField
+            label="Signed by (English)"
+            name="welcomeSignature"
+            defaultValue={settings.welcome_signature ?? undefined}
+            hint="Optional, for example: Pastor Name, Senior Pastor"
+            errors={state.fieldErrors?.welcomeSignature}
+          />
+          <ImageUploadField
+            label="Welcome picture (optional)"
+            name="welcomeImageUrl"
+            defaultValue={settings.welcome_image_url}
+            hint="For example a photo of the pastor or the congregation."
+            errors={state.fieldErrors?.welcomeImageUrl}
+          />
+
+          <TextField
+            label="Welcome Heading (Amharic)"
+            name="welcomeTitleAm"
+            defaultValue={settings.welcome_title_am ?? undefined}
+            hint="Shown when a visitor switches to Amharic. If empty, the standard Amharic heading is used."
+            errors={state.fieldErrors?.welcomeTitleAm}
+          />
+          <TextAreaField
+            label="Welcome Message (Amharic)"
+            name="welcomeTextAm"
+            rows={7}
+            defaultValue={settings.welcome_text_am ?? undefined}
+            hint="If empty, the English message is shown."
+            errors={state.fieldErrors?.welcomeTextAm}
+          />
+          <TextField
+            label="Signed by (Amharic)"
+            name="welcomeSignatureAm"
+            defaultValue={settings.welcome_signature_am ?? undefined}
+            hint="If empty, the English signature is shown."
+            errors={state.fieldErrors?.welcomeSignatureAm}
+          />
+        </div>
       </div>
 
       <div hidden={tab !== "about"} className="space-y-5">

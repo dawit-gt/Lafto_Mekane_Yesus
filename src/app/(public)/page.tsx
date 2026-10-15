@@ -3,6 +3,7 @@ import { Section } from "@/components/ui/Section";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
+import { Markdown } from "@/components/ui/Markdown";
 import { CrossMark } from "@/components/brand/CrossMark";
 import {
   getAnnouncements,
@@ -32,6 +33,13 @@ export default async function HomePage() {
   const heroText =
     pick(settings?.hero_text, settings?.hero_text_am) ||
     "Lafto Mekaneyesus is a congregation of the Ethiopian Evangelical Church Mekane Yesus, welcoming everyone — near or far — into worship, community, and service.";
+
+  const welcomeText = pick(settings?.welcome_text, settings?.welcome_text_am);
+  const welcomeTitle =
+    pick(settings?.welcome_title, settings?.welcome_title_am) ||
+    (locale === "am" ? "እንኳን ደህና መጡ" : "Welcome");
+  const welcomeSignature = pick(settings?.welcome_signature, settings?.welcome_signature_am);
+  const welcomeImage = settings?.welcome_image_url || null;
 
   const serviceTimes =
     settings?.service_times_md?.trim() ||
@@ -106,6 +114,36 @@ export default async function HomePage() {
           </div>
         </div>
       </Section>
+
+      {/* Welcome message (written in Admin -> Settings -> Home page) */}
+      {welcomeText && (
+        <Section>
+          <Reveal>
+            <div
+              className={
+                welcomeImage ? "grid items-center gap-10 lg:grid-cols-[2fr_3fr]" : "mx-auto max-w-3xl"
+              }
+            >
+              {welcomeImage && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={welcomeImage}
+                  alt=""
+                  loading="lazy"
+                  className="aspect-[4/3] w-full rounded-sm border border-line object-cover"
+                />
+              )}
+              <div>
+                <h2 className="font-serif text-3xl font-bold text-forest">{welcomeTitle}</h2>
+                <Markdown className="mt-4 text-ink/85">{welcomeText}</Markdown>
+                {welcomeSignature && (
+                  <p className="mt-2 font-serif text-lg italic text-brass-dim">{welcomeSignature}</p>
+                )}
+              </div>
+            </div>
+          </Reveal>
+        </Section>
+      )}
 
       {/* Announcements */}
       {announcements.length > 0 && (
