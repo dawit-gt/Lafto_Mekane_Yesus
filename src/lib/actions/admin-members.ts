@@ -102,7 +102,7 @@ export async function createMember(_prevState: FormState, formData: FormData): P
   }
 
   revalidatePath("/admin/members");
-  revalidatePath("/family");
+  revalidatePath("/members");
   redirect("/admin/members");
 }
 
@@ -146,7 +146,7 @@ export async function updateMember(
   }
 
   revalidatePath("/admin/members");
-  revalidatePath("/family");
+  revalidatePath("/members");
   redirect("/admin/members");
 }
 
@@ -173,5 +173,5 @@ export async function deleteMember(id: string): Promise<void> {
   }
   await logAudit(supabase, user.id, "delete", id);
   revalidatePath("/admin/members");
-  revalidatePath("/family");
+  revalidatePath("/members");
 }

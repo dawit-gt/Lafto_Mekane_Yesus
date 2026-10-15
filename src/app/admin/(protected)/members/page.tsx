@@ -30,7 +30,7 @@ export default async function AdminMembersPage() {
       <p className="mt-2 text-sm text-ink/70">
         {members.length} total, {activeCount} active. This list is private and only visible to
         website admins. Only members you tick &ldquo;show on the public page&rdquo; appear on the
-        Church Family page, and only with their name and photo.
+        public Members page, and only with their name and photo.
       </p>
 
       {members.length > 0 ? (

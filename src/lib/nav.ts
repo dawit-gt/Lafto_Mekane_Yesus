@@ -8,6 +8,7 @@ export const primaryNav: readonly NavItem[] = [
   { key: "about", href: "/about" },
   { key: "visit", href: "/visit" },
   { key: "ministries", href: "/ministries" },
+  { key: "members", href: "/members" },
   { key: "sermons", href: "/sermons" },
   { key: "events", href: "/events" },
   { key: "contact", href: "/contact" },

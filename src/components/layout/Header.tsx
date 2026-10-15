@@ -40,7 +40,7 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
         </Link>
 
         {/* Desktop nav */}
-        <nav aria-label="Primary" className="hidden items-center gap-6 lg:flex">
+        <nav aria-label="Primary" className="hidden items-center gap-4 lg:flex xl:gap-6">
           {primaryNav.map((item) => {
             const active = pathname === item.href;
             return (

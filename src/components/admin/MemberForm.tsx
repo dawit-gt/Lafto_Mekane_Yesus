@@ -196,7 +196,7 @@ export function MemberForm({
           defaultChecked={member?.directory_visible}
           className="mt-0.5 h-4 w-4 rounded-sm border-line accent-forest"
         />
-        Show this person&apos;s name and photo on the public &ldquo;Church Family&rdquo; page. Tick
+        Show this person&apos;s name and photo on the public Members page. Tick
         only if they gave permission.
       </label>
 

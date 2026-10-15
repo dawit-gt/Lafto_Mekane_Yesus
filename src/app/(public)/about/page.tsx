@@ -87,11 +87,8 @@ export default async function AboutPage() {
         )}
 
         <p className="mt-8 text-sm">
-          <Link
-            href="/family"
-            className="font-medium text-forest underline underline-offset-4"
-          >
-            Meet our church family
+          <Link href="/members" className="font-medium text-forest underline underline-offset-4">
+            See our members
           </Link>
         </p>
       </Section>
