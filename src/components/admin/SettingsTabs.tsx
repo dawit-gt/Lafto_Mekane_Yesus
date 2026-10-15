@@ -12,6 +12,7 @@ const tabs: Array<{ key: Tab; label: string }> = [
   { key: "general", label: "General" },
   { key: "home", label: "Home page" },
   { key: "about", label: "About page" },
+  { key: "legal", label: "Legal pages" },
   { key: "seo", label: "Search & sharing" },
   { key: "giving", label: "Giving" },
 ];

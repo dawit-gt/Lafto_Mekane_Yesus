@@ -7,11 +7,12 @@ import { TextField, TextAreaField } from "@/components/ui/Field";
 import { ImageUploadField } from "@/components/admin/ImageUploadField";
 import { RepeatableRows } from "@/components/admin/RepeatableRows";
 import { toPhones } from "@/lib/utils/contact-lists";
+import { defaultLegalMarkdown } from "@/lib/legal-defaults";
 import { SubmitButton } from "@/components/ui/SubmitButton";
 import { FormStatusBanner } from "@/components/forms/FormStatusBanner";
 import type { SiteSettings } from "@/types/database";
 
-export type SiteTab = "general" | "home" | "about" | "seo";
+export type SiteTab = "general" | "home" | "about" | "legal" | "seo";
 
 /**
  * One form with all the site settings, shown a tab at a time. Every tab's fields
@@ -170,6 +171,44 @@ export function SiteSettingsForm({ settings, tab }: { settings: SiteSettings; ta
           rows={5}
           defaultValue={settings.about_denomination_am ?? undefined}
           errors={state.fieldErrors?.aboutDenominationAm}
+        />
+      </div>
+
+      <div className={tab === "legal" ? "space-y-5" : "hidden"}>
+        <p className="text-xs text-ink/60">
+          These are the Privacy, Terms and Accessibility pages linked in the footer. The standard
+          wording is filled in so you can change it. You can use ## for headings, - for list
+          items, **bold** and [links](https://example.org). Clear a box and save to go back to the
+          standard wording.
+        </p>
+
+        <TextAreaField
+          label="Privacy Policy"
+          name="privacyMd"
+          rows={14}
+          defaultValue={settings.privacy_md ?? defaultLegalMarkdown("privacy")}
+          errors={state.fieldErrors?.privacyMd}
+        />
+        <TextAreaField
+          label="Terms of Use"
+          name="termsMd"
+          rows={14}
+          defaultValue={settings.terms_md ?? defaultLegalMarkdown("terms")}
+          errors={state.fieldErrors?.termsMd}
+        />
+        <TextAreaField
+          label="Accessibility"
+          name="accessibilityMd"
+          rows={14}
+          defaultValue={settings.accessibility_md ?? defaultLegalMarkdown("accessibility")}
+          errors={state.fieldErrors?.accessibilityMd}
+        />
+        <TextField
+          label="Last updated (shown on the pages)"
+          name="legalLastUpdated"
+          defaultValue={settings.legal_last_updated ?? undefined}
+          hint="For example 15 October 2026. Update it whenever you change the wording."
+          errors={state.fieldErrors?.legalLastUpdated}
         />
       </div>
 

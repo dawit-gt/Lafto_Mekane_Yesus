@@ -4,6 +4,7 @@ import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { normalizeTelegramUrl } from "@/lib/site-config";
+import { defaultLegalMarkdown, type LegalKind } from "@/lib/legal-defaults";
 import type { FormState } from "@/lib/actions/state";
 
 const phoneRowSchema = z.object({
@@ -40,7 +41,18 @@ function readRows(formData: FormData, names: string[]): Record<string, string>[]
   return rows;
 }
 
+/** Text equal to the standard wording is stored as "nothing", so later wording updates still apply. */
+function legalOrNull(kind: LegalKind, value: string | undefined): string | null {
+  const text = (value ?? "").replace(/\r\n/g, "\n").trim();
+  if (!text || text === defaultLegalMarkdown(kind).trim()) return null;
+  return text;
+}
+
 const siteSettingsSchema = z.object({
+  privacyMd: z.string().max(30000, "This text is too long.").optional().or(z.literal("")),
+  termsMd: z.string().max(30000, "This text is too long.").optional().or(z.literal("")),
+  accessibilityMd: z.string().max(30000, "This text is too long.").optional().or(z.literal("")),
+  legalLastUpdated: z.string().trim().max(60).optional().or(z.literal("")),
   contactPhones: z.array(phoneRowSchema).max(10, "You can add up to 10 phone numbers."),
   serviceTimesMd: z.string().trim().max(1000).optional().or(z.literal("")),
   seoDefaultTitle: z.string().trim().max(120).optional().or(z.literal("")),
@@ -115,6 +127,10 @@ export async function updateSiteSettings(
       name: r.phoneName,
       number: r.phoneNumber,
     })),
+    privacyMd: formData.get("privacyMd") ?? "",
+    termsMd: formData.get("termsMd") ?? "",
+    accessibilityMd: formData.get("accessibilityMd") ?? "",
+    legalLastUpdated: formData.get("legalLastUpdated") ?? "",
   });
 
   if (!parsed.success) {
@@ -155,6 +171,10 @@ export async function updateSiteSettings(
         church_name_am: d.churchNameAm || null,
         telegram_group_url: d.telegramGroupUrl || null,
         contact_phones: d.contactPhones,
+        privacy_md: legalOrNull("privacy", d.privacyMd),
+        terms_md: legalOrNull("terms", d.termsMd),
+        accessibility_md: legalOrNull("accessibility", d.accessibilityMd),
+        legal_last_updated: d.legalLastUpdated || null,
       })
       .eq("id", 1)
       .select("id");

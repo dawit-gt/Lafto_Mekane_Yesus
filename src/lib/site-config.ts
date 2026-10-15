@@ -12,16 +12,17 @@ export const siteConfig = {
 
   // REQUIRED before launch: the address people should write to about privacy,
   // terms and accessibility. While this placeholder is here, it shows on the pages.
+  contactEmail: "privacy@example.org",
 
-  // How long the team keeps submissions before deleting them.
-  // These are suggestions. The church should decide the real periods.
-    // The church's real place on the map (taken from the church's Google Maps link).
+  // The church's real place on the map (taken from the church's Google Maps link).
   map: {
     latitude: 8.9515792,
     longitude: 38.7457497,
     shareUrl: "https://maps.app.goo.gl/EmWMNZbWEBn1owh4A",
   },
-  
+
+  // How long the team keeps submissions before deleting them.
+  // These are suggestions. The church should decide the real periods.
   retentionMonths: {
     contactMessages: 12,
     volunteerRequests: 12,
