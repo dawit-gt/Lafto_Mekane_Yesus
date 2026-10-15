@@ -24,23 +24,22 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
 
   return (
     <header
-      className={`sticky top-0 z-40 border-b border-line bg-paper-raised/95 backdrop-blur transition-shadow duration-300 ${
-        scrolled ? "shadow-md shadow-forest/10" : ""
+      className={`sticky top-0 z-40 bg-paper-raised/95 backdrop-blur ${
+        scrolled ? "shadow-[0_10px_30px_-24px_rgba(7,59,120,0.65)]" : ""
       }`}
     >
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <Link href="/" className="group flex items-center gap-3" onClick={() => setMenuOpen(false)}>
-          <Logo size={44} className="transition-transform duration-300 group-hover:scale-105" />
+      <div className="mx-auto flex max-w-6xl items-end justify-between gap-6 px-6 pb-3 pt-4">
+        <Link href="/" className="group flex items-center gap-3 pb-1" onClick={() => setMenuOpen(false)}>
+          <Logo size={44} className="transition-transform duration-500 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] group-hover:-rotate-3" />
           <span className="flex flex-col leading-tight">
             <span className="font-serif text-lg font-bold text-forest sm:text-xl">{dict.site.name}</span>
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-clay">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-clay">
               {dict.site.tagline}
             </span>
           </span>
         </Link>
 
-        {/* Desktop nav */}
-        <nav aria-label="Primary" className="hidden items-center gap-4 lg:flex xl:gap-6">
+        <nav aria-label="Primary" className="hidden items-center gap-x-4 pb-1 lg:flex xl:gap-x-5">
           {primaryNav.map((item) => {
             const active = pathname === item.href;
             return (
@@ -48,8 +47,8 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
                 key={item.href}
                 href={item.href}
                 aria-current={active ? "page" : undefined}
-                className={`nav-link text-sm font-medium ${
-                  active ? "text-forest" : "text-ink/80 hover:text-forest"
+                className={`nav-link text-[13px] font-medium ${
+                  active ? "text-forest" : "text-ink/75 hover:text-forest"
                 }`}
               >
                 {dict.nav[item.key]}
@@ -58,27 +57,23 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
           })}
         </nav>
 
-        <div className="hidden items-center gap-4 lg:flex">
+        <div className="hidden items-center gap-3 pb-1 lg:flex">
           <Link
             href="/search"
             aria-label={dict.header.search}
-            className="rounded-full p-2 text-ink/70 transition hover:bg-paper hover:text-forest"
+            className="nav-link text-[13px] font-medium text-ink/70 hover:text-forest"
           >
-            <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-              <circle cx="9" cy="9" r="5.5" stroke="currentColor" strokeWidth="1.8" />
-              <path d="M13.5 13.5L17 17" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-            </svg>
+            {dict.header.search}
           </Link>
           <LanguageSwitch locale={locale} label={dict.header.switchLanguage} />
-          <Button href="/contact" variant="primary" className="text-xs">
+          <Button href="/contact" variant="primary" className="px-3 py-2 text-xs">
             {dict.header.visitContact}
           </Button>
         </div>
 
-        {/* Mobile menu toggle */}
         <button
           type="button"
-          className="inline-flex h-10 w-10 items-center justify-center rounded-sm border border-line lg:hidden"
+          className="mb-1 inline-flex h-10 w-10 items-center justify-center rounded-[2px] border border-line lg:hidden"
           aria-expanded={menuOpen}
           aria-controls="mobile-nav"
           aria-label={menuOpen ? dict.header.closeMenu : dict.header.openMenu}
@@ -94,8 +89,8 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
           </svg>
         </button>
       </div>
+      <div className="dual-rule" />
 
-      {/* Mobile nav */}
       {menuOpen && (
         <nav id="mobile-nav" aria-label="Primary" className="border-t border-line bg-paper-raised px-6 py-4 lg:hidden">
           <ul className="flex flex-col gap-1">
@@ -104,7 +99,7 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
                 <Link
                   href={item.href}
                   onClick={() => setMenuOpen(false)}
-                  className="block rounded-sm px-2 py-2.5 text-base font-medium text-ink hover:bg-paper hover:text-forest"
+                  className="block rounded-[2px] px-2 py-2.5 text-base font-medium text-ink hover:bg-paper hover:text-forest"
                 >
                   {dict.nav[item.key]}
                 </Link>
@@ -114,7 +109,7 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
           <Link
             href="/search"
             onClick={() => setMenuOpen(false)}
-            className="mt-2 block rounded-sm px-2 py-2.5 text-base font-medium text-ink hover:bg-paper hover:text-forest"
+            className="mt-2 block rounded-[2px] px-2 py-2.5 text-base font-medium text-ink hover:bg-paper hover:text-forest"
           >
             {dict.header.search}
           </Link>

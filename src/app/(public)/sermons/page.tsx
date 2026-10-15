@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Section } from "@/components/ui/Section";
-import { Card } from "@/components/ui/Card";
 import { SiteImage } from "@/components/ui/SiteImage";
 import { getSeriesWithSermons, getSermons } from "@/lib/data/public";
 import { formatDate } from "@/lib/utils/format";
@@ -20,28 +19,20 @@ export default async function SermonsPage({ searchParams }: Props) {
   const allSeries = await getSeriesWithSermons();
   const activeSeries = allSeries.find((item) => item.slug === seriesSlug) ?? null;
   const sermons = await getSermons(48, activeSeries?.id);
-
-  const chipBase = "rounded-full border px-4 py-1.5 text-sm font-medium transition-colors";
-  const chipOn = "border-forest bg-forest text-paper-raised";
-  const chipOff = "border-line bg-paper-raised text-ink/80 hover:border-forest hover:text-forest";
+  const [lead, ...rest] = sermons;
 
   return (
     <>
       <Section tone="forest">
-        <h1 className="font-serif text-4xl font-bold">Sermons</h1>
-        <p className="mt-4 max-w-xl text-paper-raised/85">
-          Catch up on past messages, or revisit a favorite.
-        </p>
+        <p className="kicker">The word</p>
+        <h1 className="mt-3 font-serif text-5xl font-bold">Sermons</h1>
+        <p className="mt-5 max-w-xl text-paper-raised/85">Catch up on past messages, or revisit a favorite.</p>
       </Section>
 
       <Section>
         {allSeries.length > 0 && (
-          <nav aria-label="Sermon series" className="mb-8 flex flex-wrap gap-2">
-            <Link
-              href="/sermons"
-              aria-current={activeSeries ? undefined : "page"}
-              className={`${chipBase} ${activeSeries ? chipOff : chipOn}`}
-            >
+          <nav aria-label="Sermon series" className="mb-10 flex flex-wrap gap-x-5 gap-y-2 border-b border-line pb-4">
+            <Link href="/sermons" aria-current={activeSeries ? undefined : "page"} className={`nav-link text-sm ${activeSeries ? "text-ink/70" : "text-forest"}`}>
               All sermons
             </Link>
             {allSeries.map((item) => (
@@ -49,7 +40,7 @@ export default async function SermonsPage({ searchParams }: Props) {
                 key={item.id}
                 href={`/sermons?series=${item.slug}`}
                 aria-current={activeSeries?.id === item.id ? "page" : undefined}
-                className={`${chipBase} ${activeSeries?.id === item.id ? chipOn : chipOff}`}
+                className={`nav-link text-sm ${activeSeries?.id === item.id ? "text-forest" : "text-ink/70"}`}
               >
                 {item.title}
               </Link>
@@ -58,38 +49,48 @@ export default async function SermonsPage({ searchParams }: Props) {
         )}
 
         {activeSeries && (
-          <div className="mb-8 max-w-2xl">
-            <h2 className="font-serif text-2xl font-bold text-forest">{activeSeries.title}</h2>
+          <div className="mb-10 max-w-2xl">
+            <h2 className="font-serif text-3xl font-bold text-forest">{activeSeries.title}</h2>
             {activeSeries.description && (
-              <p className="mt-2 whitespace-pre-line text-ink/80">{activeSeries.description}</p>
+              <p className="mt-3 whitespace-pre-line text-ink/80">{activeSeries.description}</p>
             )}
           </div>
         )}
 
-        {sermons.length > 0 ? (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {sermons.map((sermon) => (
-              <Card key={sermon.id}>
-                <SiteImage src={sermon.thumbnail_url} className="aspect-video w-full rounded-sm" />
-                <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-brass">
-                  {formatDate(sermon.sermon_date)}
+        {lead ? (
+          <>
+            <Link href={`/sermons/${lead.slug}`} className="grid gap-6 border-b border-line pb-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
+              <SiteImage src={lead.thumbnail_url} className="aspect-video w-full" />
+              <div>
+                <p className="kicker">{formatDate(lead.sermon_date)}</p>
+                <h2 className="mt-2 font-serif text-4xl font-semibold text-ink">{lead.title}</h2>
+                <p className="mt-2 text-sm text-ink/70">
+                  {lead.speaker}
+                  {lead.scripture ? ` · ${lead.scripture}` : ""}
                 </p>
-                <h2 className="mt-1 font-serif text-lg font-semibold text-ink">
-                  {sermon.title}
-                </h2>
-                <p className="mt-1 text-sm text-ink/70">
-                  {sermon.speaker}
-                  {sermon.scripture ? ` · ${sermon.scripture}` : ""}
-                </p>
-                <Link
-                  href={`/sermons/${sermon.slug}`}
-                  className="mt-3 inline-block text-sm font-medium text-forest underline underline-offset-4"
-                >
-                  Watch →
-                </Link>
-              </Card>
-            ))}
-          </div>
+                <p className="mt-4 text-sm font-medium text-forest">Watch →</p>
+              </div>
+            </Link>
+            {rest.length > 0 && (
+              <ul className="mt-2 divide-y divide-line">
+                {rest.map((sermon) => (
+                  <li key={sermon.id}>
+                    <Link href={`/sermons/${sermon.slug}`} className="grid gap-1 py-5 sm:grid-cols-[9rem_1fr_auto] sm:items-baseline">
+                      <span className="kicker">{formatDate(sermon.sermon_date)}</span>
+                      <span>
+                        <span className="font-serif text-xl text-ink">{sermon.title}</span>
+                        <span className="mt-0.5 block text-sm text-ink/60">
+                          {sermon.speaker}
+                          {sermon.scripture ? ` · ${sermon.scripture}` : ""}
+                        </span>
+                      </span>
+                      <span className="text-sm text-forest">Watch →</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </>
         ) : (
           <p className="text-ink/60">No sermons published yet — check back soon.</p>
         )}

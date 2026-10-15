@@ -5,7 +5,6 @@ import { getPublicFamily } from "@/lib/data/public-family";
 export const metadata: Metadata = {
   title: "Members",
   description: "Members of Lafto Mekaneyesus who chose to be shown here.",
-  // Names and photos of real people: keep this page out of search engines.
   robots: { index: false, follow: false },
 };
 
@@ -34,66 +33,57 @@ export default async function MembersPage({ searchParams }: Props) {
   return (
     <>
       <Section tone="forest">
-        <h1 className="font-serif text-4xl font-bold">Our Members</h1>
-        <p className="mt-4 max-w-2xl text-paper-raised/85">
-          The people who worship and serve together at Lafto Mekaneyesus. Everyone shown here
-          chose to be listed.
+        <p className="kicker">The congregation</p>
+        <h1 className="mt-3 font-serif text-5xl font-bold">Our Members</h1>
+        <p className="mt-5 max-w-2xl text-paper-raised/85">
+          The people who worship and serve together at Lafto Mekaneyesus. Everyone shown here chose to be listed.
         </p>
       </Section>
 
       <Section>
         {everyone.length > 0 && (
-          <form action="/members" method="get" role="search" className="flex max-w-md gap-3">
-            <label htmlFor="member-search" className="sr-only">
-              Find a member by name
-            </label>
-            <input
-              id="member-search"
-              name="q"
-              type="search"
-              defaultValue={query}
-              maxLength={60}
-              placeholder="Find a member by name…"
-              className="w-full rounded-sm border border-line bg-paper-raised px-4 py-2.5 text-sm text-ink placeholder:text-ink/50 focus-visible:outline-none"
-            />
-            <button
-              type="submit"
-              className="rounded-sm bg-forest px-5 py-2.5 text-sm font-semibold text-paper-raised transition-colors hover:bg-forest-deep"
-            >
-              Search
-            </button>
-          </form>
-        )}
-
-        {everyone.length > 0 && (
-          <p className="mt-4 text-sm text-ink/60">
-            {query
-              ? `${members.length} of ${everyone.length} members match “${query}”`
-              : `${everyone.length} ${everyone.length === 1 ? "member" : "members"}`}
-          </p>
+          <div className="flex flex-col gap-4 border-b border-line pb-6 sm:flex-row sm:items-end sm:justify-between">
+            <p className="text-sm text-ink/60">
+              {query
+                ? `${members.length} of ${everyone.length} members match “${query}”`
+                : `${everyone.length} ${everyone.length === 1 ? "member" : "members"}`}
+            </p>
+            <form action="/members" method="get" role="search" className="flex w-full max-w-sm gap-2">
+              <label htmlFor="member-search" className="sr-only">Find a member by name</label>
+              <input
+                id="member-search"
+                name="q"
+                type="search"
+                defaultValue={query}
+                maxLength={60}
+                placeholder="Find a member by name…"
+                className="w-full rounded-[2px] border border-line bg-paper-raised px-3 py-2 text-sm text-ink placeholder:text-ink/50 focus-visible:outline-none"
+              />
+              <button type="submit" className="rounded-[2px] bg-forest px-4 py-2 text-sm font-semibold text-paper-raised hover:bg-forest-deep">
+                Search
+              </button>
+            </form>
+          </div>
         )}
 
         {members.length > 0 ? (
-          <ul className="mt-8 grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+          <ul className="mt-10 grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 lg:grid-cols-4">
             {members.map((person, index) => (
-              <li key={`${person.name}-${index}`} className="text-center">
+              <li key={`${person.name}-${index}`} className={index % 5 === 2 ? "lg:mt-8" : ""}>
                 {person.photoUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={person.photoUrl}
                     alt={person.name}
                     loading="lazy"
-                    className="mx-auto h-24 w-24 rounded-full border border-line object-cover"
+                    className="aspect-[4/5] w-full object-cover"
                   />
                 ) : (
-                  <div
-                    aria-hidden="true"
-                    className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-forest/10 font-serif text-xl font-semibold text-forest"
-                  >
+                  <div aria-hidden="true" className="flex aspect-[4/5] w-full items-center justify-center bg-forest/10 font-serif text-3xl text-forest">
                     {initials(person.name)}
                   </div>
                 )}
-                <p className="mt-3 text-sm font-medium text-ink">{person.name}</p>
+                <p className="mt-3 font-serif text-lg leading-tight text-ink">{person.name}</p>
               </li>
             ))}
           </ul>
