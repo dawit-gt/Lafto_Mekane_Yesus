@@ -19,9 +19,11 @@ export function TextField({
   hint,
   type = "text",
   defaultValue,
+  autoComplete,
 }: BaseProps & {
   type?: "text" | "email" | "tel" | "password";
   defaultValue?: string;
+  autoComplete?: string;
 }) {
   return (
     <FieldWrapper label={label} name={name} required={required} errors={errors} hint={hint}>
@@ -30,6 +32,7 @@ export function TextField({
         name={name}
         type={type}
         required={required}
+        autoComplete={autoComplete}
         defaultValue={defaultValue}
         aria-invalid={errors && errors.length > 0}
         className={fieldClasses}

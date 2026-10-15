@@ -10,6 +10,13 @@ import type { FormState } from "@/lib/actions/state";
 const addAdminSchema = z.object({
   email: z.string().trim().email("Please enter a valid email address."),
   fullName: z.string().trim().min(1, "Please enter their name.").max(200),
+  // Needed to create a new sign-in account. Leave empty to give Admin access to an
+  // account that already exists.
+  password: z
+    .string()
+    .max(72, "Passwords can be up to 72 characters.")
+    .refine((v) => v === "" || v.length >= 10, "Use at least 10 characters.")
+    .optional(),
 });
 
 /** Looks through Supabase Auth accounts for an exact email match. */
@@ -37,6 +44,7 @@ export async function addAdmin(_prevState: FormState, formData: FormData): Promi
   const parsed = addAdminSchema.safeParse({
     email: formData.get("email"),
     fullName: formData.get("fullName"),
+    password: String(formData.get("password") ?? ""),
   });
   if (!parsed.success) {
     return {
@@ -47,17 +55,29 @@ export async function addAdmin(_prevState: FormState, formData: FormData): Promi
   }
   const email = parsed.data.email.toLowerCase();
   const fullName = parsed.data.fullName;
+  const password = parsed.data.password ?? "";
+
+  let createdAuthUserId: string | null = null;
 
   try {
-    const targetId = await findAuthUserIdByEmail(email);
+    let targetId = await findAuthUserIdByEmail(email);
+
     if (!targetId) {
-      return {
-        status: "error",
-        message: "No account with that email exists yet.",
-        fieldErrors: {
-          email: ["Create the account in Supabase first (Authentication → Users), then add it here."],
-        },
-      };
+      if (!password) {
+        return {
+          status: "error",
+          message: "No account with that email exists yet.",
+          fieldErrors: { password: ["Choose a password to create their account."] },
+        };
+      }
+      const { data: created, error: createError } = await createAdminClient().auth.admin.createUser({
+        email,
+        password,
+        email_confirm: true,
+      });
+      if (createError || !created.user) throw createError ?? new Error("Could not create the account");
+      targetId = created.user.id;
+      createdAuthUserId = created.user.id;
     }
 
     const supabase = await createClient();
@@ -81,18 +101,31 @@ export async function addAdmin(_prevState: FormState, formData: FormData): Promi
       action: "add_admin",
       table_name: "admin_users",
       record_id: targetId,
-      details: { name: fullName },
+      details: { name: fullName, account_created: createdAuthUserId !== null },
     });
   } catch (err) {
     console.error("addAdmin failed:", err);
+    // Don't leave a sign-in account behind if granting access failed.
+    if (createdAuthUserId) {
+      try {
+        await createAdminClient().auth.admin.deleteUser(createdAuthUserId);
+      } catch (cleanupErr) {
+        console.error("addAdmin cleanup failed:", cleanupErr);
+      }
+    }
     return {
       status: "error",
-      message: "Something went wrong. Check that SUPABASE_SERVICE_ROLE_KEY is set in .env.local, then try again.",
+      message: "Something went wrong. Check that SUPABASE_SERVICE_ROLE_KEY is set, then try again.",
     };
   }
 
   revalidatePath("/admin/users");
-  return { status: "success", message: `${fullName} now has Admin access.` };
+  return {
+    status: "success",
+    message: createdAuthUserId
+      ? `${fullName} can now sign in at /admin/login with ${email} and the password you set. Share the password with them privately.`
+      : `${fullName} now has Admin access.`,
+  };
 }
 
 export async function removeAdmin(id: string): Promise<void> {

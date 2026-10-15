@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Card } from "@/components/ui/Card";
 import { AddAdminForm } from "@/components/admin/AddAdminForm";
 import { DeleteButton } from "@/components/admin/DeleteButton";
 import { getAdminUsers } from "@/lib/data/admin-users";
@@ -23,6 +22,10 @@ export default async function AdminUsersPage() {
         People listed here can sign in at /admin/login and manage everything on the site. Only
         grant access to people who need it, and remove it as soon as their role changes.
       </p>
+
+      <div className="mt-6">
+        <AddAdminForm />
+      </div>
 
       <div className="mt-6 overflow-x-auto rounded-sm border border-line bg-paper-raised">
         <table className="w-full text-left text-sm">
@@ -65,17 +68,6 @@ export default async function AdminUsersPage() {
           </tbody>
         </table>
       </div>
-
-      <h2 className="mt-10 text-lg font-semibold text-ink">Grant Admin Access</h2>
-      <Card className="mt-3 max-w-xl">
-        <p className="mb-5 text-sm text-ink/70">
-          This page grants and removes Admin rights, but it doesn&apos;t create sign-in accounts. To
-          add a new person: in Supabase go to <strong>Authentication → Users → Add user</strong>
-          (tick &quot;Auto Confirm User&quot;), share their password with them privately, then enter
-          their email below.
-        </p>
-        <AddAdminForm />
-      </Card>
     </div>
   );
 }
