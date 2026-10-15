@@ -1,19 +1,8 @@
 import type { ReactNode } from "react";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { SignOutButton } from "@/components/forms/SignOutButton";
-
-const adminNav = [
-  { label: "Dashboard", href: "/admin/dashboard" },
-  { label: "Content", href: "/admin/content" },
-  { label: "Communication", href: "/admin/communication" },
-  { label: "Members", href: "/admin/members" },
-  { label: "Media", href: "/admin/media" },
-  { label: "Users", href: "/admin/users" },
-  { label: "Audit Logs", href: "/admin/audit-logs" },
-  { label: "Settings", href: "/admin/settings" },
-] as const;
+import { AdminMobileBar, AdminSidebar } from "@/components/admin/AdminNav";
 
 export default async function ProtectedAdminLayout({
   children,
@@ -46,29 +35,18 @@ export default async function ProtectedAdminLayout({
 
   return (
     <div className="flex min-h-screen">
-      <aside className="hidden w-56 shrink-0 border-r border-line bg-paper-raised p-6 lg:block">
-        <p className="font-serif text-lg font-bold text-forest">Admin</p>
-        <nav aria-label="Admin" className="mt-6 flex flex-col gap-1">
-          {adminNav.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="rounded-sm px-2 py-2 text-sm font-medium text-ink/80 hover:bg-paper hover:text-forest"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-      </aside>
+      <AdminSidebar />
 
-      <div className="flex-1">
-        <header className="flex items-center justify-between border-b border-line bg-paper-raised px-6 py-4">
+      {/* min-w-0 lets wide tables scroll inside the page instead of stretching it */}
+      <div className="min-w-0 flex-1">
+        <AdminMobileBar name={adminRow.full_name} />
+        <header className="hidden items-center justify-between border-b border-line bg-paper-raised px-6 py-4 lg:flex">
           <p className="text-sm text-ink/70">
             Signed in as <span className="font-medium text-ink">{adminRow.full_name}</span>
           </p>
           <SignOutButton />
         </header>
-        <main className="p-6">{children}</main>
+        <main className="p-4 sm:p-6">{children}</main>
       </div>
     </div>
   );

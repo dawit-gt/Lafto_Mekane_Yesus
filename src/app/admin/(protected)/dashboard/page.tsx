@@ -65,7 +65,7 @@ export default async function AdminDashboardPage() {
       {recentSubmissions.length > 0 ? (
         <div className="mt-4 divide-y divide-line rounded-sm border border-line bg-paper-raised">
           {recentSubmissions.map((item) => (
-            <div key={`${item.type}-${item.id}`} className="flex items-center justify-between px-4 py-3">
+            <div key={`${item.type}-${item.id}`} className="flex items-center justify-between gap-3 px-4 py-3">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wide text-brass">
                   {item.type}
