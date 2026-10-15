@@ -52,9 +52,6 @@ export async function Footer() {
               <Link href="/contact" className="hover:text-paper-raised">{dict.footer.contactDirections}</Link>
             </li>
             <li>
-              <Link href="/contact#volunteer" className="hover:text-paper-raised">{dict.footer.volunteer}</Link>
-            </li>
-            <li>
               <Link href="/contact#give" className="hover:text-paper-raised">{dict.footer.giving}</Link>
             </li>
             {telegramUrl && (

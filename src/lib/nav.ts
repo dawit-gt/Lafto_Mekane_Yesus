@@ -14,7 +14,6 @@ export const primaryNav: readonly NavItem[] = [
 ];
 
 export const secondaryNav: readonly NavItem[] = [
-  { key: "stories", href: "/stories" },
   { key: "announcements", href: "/announcements" },
   { key: "prayer", href: "/prayer" },
 ];

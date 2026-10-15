@@ -25,7 +25,7 @@ export default async function AdminMediaPage() {
       <p className="mt-2 max-w-2xl text-sm text-ink/70">
         Upload pictures and PDFs here, then use <strong>Copy link</strong> and paste the link into
         a &ldquo;Photo URL&rdquo; or &ldquo;Image URL&rdquo; field on an event, sermon, ministry,
-        story or leader. Everything in this library is public: anyone with the link can open it.
+        sermon or leader. Everything in this library is public: anyone with the link can open it.
         Do not upload private documents or member photos here.
       </p>
 
@@ -59,7 +59,7 @@ export default async function AdminMediaPage() {
                   <CopyUrlButton url={item.url} />
                   <DeleteButton
                     action={deleteMedia.bind(null, item.id)}
-                    confirmMessage={`Delete "${item.title}"? Any page using this link will lose it.`}
+                    confirmMessage={`Delete "${item.title}"? Anything using this link will lose it.`}
                   />
                 </div>
               </div>

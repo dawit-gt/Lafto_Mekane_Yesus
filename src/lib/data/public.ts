@@ -8,10 +8,8 @@ import type {
   Leader,
   Location,
   Ministry,
-  Page,
   Sermon,
   SermonSeries,
-  Story,
 } from "@/types/database";
 
 export async function getUpcomingEvents(limit = 4): Promise<Event[]> {
@@ -121,47 +119,6 @@ export async function getEventBySlug(slug: string): Promise<Event | null> {
     return data;
   } catch (err) {
     console.error("getEventBySlug failed:", err);
-    return null;
-  }
-}
-
-export async function getStories(limit = 24): Promise<Story[]> {
-  try {
-    const supabase = await createClient();
-    const { data, error } = await supabase
-      .from("stories").select("*").eq("status", "published")
-      .order("created_at", { ascending: false }).limit(limit);
-    if (error) throw error;
-    return data ?? [];
-  } catch (err) {
-    console.error("getStories failed:", err);
-    return [];
-  }
-}
-
-export async function getStoryBySlug(slug: string): Promise<Story | null> {
-  try {
-    const supabase = await createClient();
-    const { data, error } = await supabase
-      .from("stories").select("*").eq("status", "published").eq("slug", slug).maybeSingle();
-    if (error) throw error;
-    return data;
-  } catch (err) {
-    console.error("getStoryBySlug failed:", err);
-    return null;
-  }
-}
-
-export async function getFeaturedStory(): Promise<Story | null> {
-  try {
-    const supabase = await createClient();
-    const { data, error } = await supabase
-      .from("stories").select("*").eq("status", "published").eq("featured", true)
-      .order("created_at", { ascending: false }).limit(1).maybeSingle();
-    if (error) throw error;
-    return data;
-  } catch (err) {
-    console.error("getFeaturedStory failed:", err);
     return null;
   }
 }
@@ -279,26 +236,6 @@ export async function getGivingSettings() {
     return data;
   } catch (err) {
     console.error("getGivingSettings failed:", err);
-    return null;
-  }
-}
-
-export async function getPublishedPageBySlug(
-  slug: string,
-): Promise<Page | null> {
-  try {
-    const supabase = await createClient();
-    const { data, error } = await supabase
-      .from("pages")
-      .select("*")
-      .eq("status", "published")
-      .eq("slug", slug)
-      .maybeSingle();
-
-    if (error) throw error;
-    return data;
-  } catch (err) {
-    console.error("getPublishedPageBySlug failed:", err);
     return null;
   }
 }

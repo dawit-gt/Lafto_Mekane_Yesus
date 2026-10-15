@@ -8,7 +8,7 @@ import { createClient } from "@/lib/supabase/server";
  * down the whole dashboard.
  */
 
-type ContentTable = "events" | "sermons" | "ministries" | "stories" | "announcements" | "pages";
+type ContentTable = "events" | "sermons" | "ministries" | "announcements";
 
 export interface ContentCounts {
   published: number;
@@ -16,7 +16,7 @@ export interface ContentCounts {
 }
 
 export async function getContentCounts(): Promise<Record<ContentTable, ContentCounts>> {
-  const tables: ContentTable[] = ["events", "sermons", "ministries", "stories", "announcements", "pages"];
+  const tables: ContentTable[] = ["events", "sermons", "ministries", "announcements"];
   const supabase = await createClient();
 
   const results = await Promise.all(
@@ -35,31 +35,28 @@ export async function getContentCounts(): Promise<Record<ContentTable, ContentCo
 export interface SubmissionCounts {
   contact: number;
   prayer: number;
-  volunteer: number;
 }
 
 export async function getNewSubmissionCounts(): Promise<SubmissionCounts> {
   try {
     const supabase = await createClient();
-    const [contact, prayer, volunteer] = await Promise.all([
+    const [contact, prayer] = await Promise.all([
       supabase.from("contact_messages").select("id", { count: "exact", head: true }).eq("status", "new"),
       supabase.from("prayer_requests").select("id", { count: "exact", head: true }).eq("status", "new"),
-      supabase.from("volunteer_requests").select("id", { count: "exact", head: true }).eq("status", "new"),
     ]);
     return {
       contact: contact.count ?? 0,
       prayer: prayer.count ?? 0,
-      volunteer: volunteer.count ?? 0,
     };
   } catch (err) {
     console.error("getNewSubmissionCounts failed:", err);
-    return { contact: 0, prayer: 0, volunteer: 0 };
+    return { contact: 0, prayer: 0 };
   }
 }
 
 export interface RecentSubmission {
   id: string;
-  type: "contact" | "prayer" | "volunteer";
+  type: "contact" | "prayer";
   summary: string;
   createdAt: string;
 }
@@ -67,20 +64,15 @@ export interface RecentSubmission {
 export async function getRecentSubmissions(limit = 6): Promise<RecentSubmission[]> {
   try {
     const supabase = await createClient();
-    const [contact, prayer, volunteer] = await Promise.all([
+    const [contact, prayer] = await Promise.all([
       supabase
         .from("contact_messages")
-        .select("id, name, subject, created_at")
+        .select("id, name, created_at")
         .order("created_at", { ascending: false })
         .limit(limit),
       supabase
         .from("prayer_requests")
         .select("id, name, is_confidential, created_at")
-        .order("created_at", { ascending: false })
-        .limit(limit),
-      supabase
-        .from("volunteer_requests")
-        .select("id, name, ministry_interest, created_at")
         .order("created_at", { ascending: false })
         .limit(limit),
     ]);
@@ -89,19 +81,13 @@ export async function getRecentSubmissions(limit = 6): Promise<RecentSubmission[
       ...(contact.data ?? []).map((row) => ({
         id: row.id,
         type: "contact" as const,
-        summary: `${row.name} — ${row.subject || "General inquiry"}`,
+        summary: `${row.name} — contact message`,
         createdAt: row.created_at,
       })),
       ...(prayer.data ?? []).map((row) => ({
         id: row.id,
         type: "prayer" as const,
         summary: row.is_confidential ? "Confidential prayer request" : row.name || "Anonymous prayer request",
-        createdAt: row.created_at,
-      })),
-      ...(volunteer.data ?? []).map((row) => ({
-        id: row.id,
-        type: "volunteer" as const,
-        summary: `${row.name} — ${row.ministry_interest || "General interest"}`,
         createdAt: row.created_at,
       })),
     ];

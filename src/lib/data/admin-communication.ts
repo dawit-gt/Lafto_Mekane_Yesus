@@ -4,7 +4,6 @@ import type { Database } from "@/types/database";
 type Tables = Database["public"]["Tables"];
 export type ContactMessage = Tables["contact_messages"]["Row"];
 export type PrayerRequest = Tables["prayer_requests"]["Row"];
-export type VolunteerRequest = Tables["volunteer_requests"]["Row"];
 
 /**
  * Runs with the signed-in Admin's session. RLS only lets admins read these
@@ -40,22 +39,6 @@ export async function getPrayerRequests(limit = 100): Promise<PrayerRequest[]> {
     return data ?? [];
   } catch (err) {
     console.error("getPrayerRequests failed:", err);
-    return [];
-  }
-}
-
-export async function getVolunteerRequests(limit = 100): Promise<VolunteerRequest[]> {
-  try {
-    const supabase = await createClient();
-    const { data, error } = await supabase
-      .from("volunteer_requests")
-      .select("*")
-      .order("created_at", { ascending: false })
-      .limit(limit);
-    if (error) throw error;
-    return data ?? [];
-  } catch (err) {
-    console.error("getVolunteerRequests failed:", err);
     return [];
   }
 }

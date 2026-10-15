@@ -4,7 +4,7 @@ import { useTransition } from "react";
 import { setSubmissionStatus } from "@/lib/actions/admin-communication";
 
 interface Props {
-  table: "contact_messages" | "prayer_requests" | "volunteer_requests";
+  table: "contact_messages" | "prayer_requests";
   id: string;
   status: string;
 }

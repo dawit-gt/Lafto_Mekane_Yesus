@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
 import { Section } from "@/components/ui/Section";
 import { Card } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
+import { CopyButton } from "@/components/ui/CopyButton";
 import { ContactForm } from "@/components/forms/ContactForm";
-import { VolunteerForm } from "@/components/forms/VolunteerForm";
 import { ChurchMap } from "@/components/ui/ChurchMap";
-import { getGivingSettings, getPrimaryLocation, getTelegramUrl } from "@/lib/data/public";
+import { getGivingSettings, getPrimaryLocation, getSiteSettings, getTelegramUrl } from "@/lib/data/public";
+import { telHref, toAccounts, toPhones } from "@/lib/utils/contact-lists";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: "Get in touch, volunteer, find directions, or learn how to give to Lafto Mekaneyesus.",
+  description: "Get in touch, find directions, or learn how to give to Lafto Mekaneyesus.",
 };
 
 export default async function ContactPage() {
@@ -19,12 +19,16 @@ export default async function ContactPage() {
     getTelegramUrl(),
   ]);
 
+  const settings = await getSiteSettings();
+  const phones = toPhones(settings?.contact_phones);
+  const accounts = toAccounts(giving?.accounts);
+
   return (
     <>
       <Section tone="forest">
         <h1 className="font-serif text-4xl font-bold">Contact Us</h1>
         <p className="mt-4 max-w-xl text-paper-raised/85">
-          Questions, volunteering, giving, or directions — everything is
+          Questions, giving, or directions — everything is
           here in one place.
         </p>
       </Section>
@@ -37,6 +41,25 @@ export default async function ContactPage() {
             <p className="mt-3 text-sm text-ink/70">
               We typically respond within a few business days.
             </p>
+
+            {phones.length > 0 && (
+              <Card className="mt-6">
+                <h3 className="font-semibold text-forest">Call us</h3>
+                <ul className="mt-3 space-y-2">
+                  {phones.map((p, i) => (
+                    <li key={`${p.number}-${i}`} className="text-sm text-ink/85">
+                      {p.name && <span className="block text-xs text-ink/60">{p.name}</span>}
+                      <a
+                        href={telHref(p.number)}
+                        className="font-semibold text-forest hover:underline"
+                      >
+                        {p.number}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </Card>
+            )}
 
             {telegramUrl && (
               <Card className="mt-6">
@@ -59,20 +82,6 @@ export default async function ContactPage() {
         </div>
       </Section>
 
-      {/* Volunteer */}
-      <Section tone="raised" className="scroll-mt-20" id="volunteer">
-        <div className="grid gap-10 lg:grid-cols-[1fr_1.2fr]">
-          <div>
-            <h2 className="text-2xl font-bold text-forest">Volunteer</h2>
-            <p className="mt-3 text-sm text-ink/70">
-              Tell us where you&apos;d like to serve, and a ministry leader will
-              follow up with you.
-            </p>
-          </div>
-          <VolunteerForm />
-        </div>
-      </Section>
-
       {/* Giving */}
       <Section className="scroll-mt-20" id="give">
         <h2 className="text-2xl font-bold text-forest">Giving</h2>
@@ -81,12 +90,22 @@ export default async function ContactPage() {
             {giving?.informational_note ??
               "Giving is currently informational only. Please see in-person or bank transfer options below."}
           </p>
-          {giving?.is_online_giving_enabled && giving.provider_url && (
-            <Button href={giving.provider_url} variant="primary" className="mt-4">
-              Give Online via {giving.provider_name ?? "our giving partner"}
-            </Button>
-          )}
         </Card>
+
+        {accounts.length > 0 && (
+          <div className="mt-6 grid max-w-2xl gap-4 sm:grid-cols-2">
+            {accounts.map((a, i) => (
+              <Card key={`${a.number}-${i}`}>
+                <p className="text-sm font-semibold text-forest">{a.provider}</p>
+                {a.holder && <p className="mt-1 text-xs text-ink/60">{a.holder}</p>}
+                <p className="mt-3 break-all font-mono text-base text-ink">{a.number}</p>
+                <div className="mt-3">
+                  <CopyButton text={a.number} label="Copy number" />
+                </div>
+              </Card>
+            ))}
+          </div>
+        )}
       </Section>
 
       {/* Directions */}

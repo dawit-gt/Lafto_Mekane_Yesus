@@ -1,27 +1,23 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Card } from "@/components/ui/Card";
-import {
-  getContactMessages,
-  getPrayerRequests,
-  getVolunteerRequests,
-} from "@/lib/data/admin-communication";
+import { getContactMessages, getPrayerRequests } from "@/lib/data/admin-communication";
 import { deleteSubmission } from "@/lib/actions/admin-communication";
 import { DeleteButton } from "@/components/admin/DeleteButton";
 import { SubmissionStatusSelect } from "@/components/admin/SubmissionStatusSelect";
 import { formatEventDateTime } from "@/lib/utils/format";
+import { telHref } from "@/lib/utils/contact-lists";
 
 export const metadata: Metadata = {
   title: "Communication",
   robots: { index: false, follow: false },
 };
 
-type Tab = "contact" | "prayer" | "volunteer";
+type Tab = "contact" | "prayer";
 
 const tabs: Array<{ key: Tab; label: string }> = [
   { key: "contact", label: "Contact" },
   { key: "prayer", label: "Prayer" },
-  { key: "volunteer", label: "Volunteer" },
 ];
 
 interface Props {
@@ -35,7 +31,7 @@ function ItemFooter({
   replyEmail,
   deleteMessage,
 }: {
-  table: "contact_messages" | "prayer_requests" | "volunteer_requests";
+  table: "contact_messages" | "prayer_requests";
   id: string;
   status: string;
   replyEmail?: string | null;
@@ -63,16 +59,11 @@ export default async function AdminCommunicationPage({ searchParams }: Props) {
   const sp = await searchParams;
   const activeTab: Tab = tabs.some((t) => t.key === sp.tab) ? (sp.tab as Tab) : "contact";
 
-  const [contact, prayer, volunteer] = await Promise.all([
-    getContactMessages(),
-    getPrayerRequests(),
-    getVolunteerRequests(),
-  ]);
+  const [contact, prayer] = await Promise.all([getContactMessages(), getPrayerRequests()]);
 
   const newCounts: Record<Tab, number> = {
     contact: contact.filter((i) => i.status === "new").length,
     prayer: prayer.filter((i) => i.status === "new").length,
-    volunteer: volunteer.filter((i) => i.status === "new").length,
   };
 
   return (
@@ -111,13 +102,22 @@ export default async function AdminCommunicationPage({ searchParams }: Props) {
               <Card key={item.id}>
                 <div className="flex flex-wrap items-baseline justify-between gap-2">
                   <p className="font-medium text-ink">
-                    {item.name}{" "}
-                    <span className="text-sm font-normal text-ink/60">&lt;{item.email}&gt;</span>
+                    {item.name}
+                    {item.email && (
+                      <span className="text-sm font-normal text-ink/60"> &lt;{item.email}&gt;</span>
+                    )}
                   </p>
                   <p className="text-xs text-ink/50">{formatEventDateTime(item.created_at)}</p>
                 </div>
                 {item.subject && <p className="mt-1 text-sm font-medium text-forest">{item.subject}</p>}
-                {item.phone && <p className="mt-1 text-xs text-ink/60">Phone: {item.phone}</p>}
+                {item.phone && (
+                  <p className="mt-1 text-sm">
+                    <span className="text-ink/60">Phone: </span>
+                    <a href={telHref(item.phone)} className="font-medium text-forest hover:underline">
+                      {item.phone}
+                    </a>
+                  </p>
+                )}
                 <p className="mt-3 whitespace-pre-line text-sm text-ink/85">{item.message}</p>
                 <ItemFooter
                   table="contact_messages"
@@ -160,41 +160,6 @@ export default async function AdminCommunicationPage({ searchParams }: Props) {
             ))
           ) : (
             <p className="text-sm text-ink/60">No prayer requests yet.</p>
-          ))}
-
-        {activeTab === "volunteer" &&
-          (volunteer.length > 0 ? (
-            volunteer.map((item) => (
-              <Card key={item.id}>
-                <div className="flex flex-wrap items-baseline justify-between gap-2">
-                  <p className="font-medium text-ink">
-                    {item.name}{" "}
-                    <span className="text-sm font-normal text-ink/60">&lt;{item.email}&gt;</span>
-                  </p>
-                  <p className="text-xs text-ink/50">{formatEventDateTime(item.created_at)}</p>
-                </div>
-                {item.phone && <p className="mt-1 text-xs text-ink/60">Phone: {item.phone}</p>}
-                {item.ministry_interest && (
-                  <p className="mt-2 text-sm text-ink/85">
-                    <span className="font-medium">Interested in:</span> {item.ministry_interest}
-                  </p>
-                )}
-                {item.availability_note && (
-                  <p className="mt-1 whitespace-pre-line text-sm text-ink/85">
-                    <span className="font-medium">Availability:</span> {item.availability_note}
-                  </p>
-                )}
-                <ItemFooter
-                  table="volunteer_requests"
-                  id={item.id}
-                  status={item.status}
-                  replyEmail={item.email}
-                  deleteMessage="Delete this volunteer request? This can't be undone."
-                />
-              </Card>
-            ))
-          ) : (
-            <p className="text-sm text-ink/60">No volunteer requests yet.</p>
           ))}
       </div>
     </div>

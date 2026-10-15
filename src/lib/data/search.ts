@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { excerpt } from "@/lib/utils/format";
 
-export type SearchKind = "Sermon" | "Event" | "Story" | "Ministry" | "Page";
+export type SearchKind = "Sermon" | "Event" | "Ministry";
 
 export interface SearchResult {
   kind: SearchKind;
@@ -38,7 +38,7 @@ export async function searchSite(rawQuery: string | undefined): Promise<SearchRe
   try {
     const supabase = await createClient();
 
-    const [sermons, events, stories, ministries, pages] = await Promise.all([
+    const [sermons, events, ministries] = await Promise.all([
       supabase
         .from("sermons")
         .select("slug, title, speaker, scripture, description")
@@ -54,25 +54,11 @@ export async function searchSite(rawQuery: string | undefined): Promise<SearchRe
         .order("start_at", { ascending: false })
         .limit(PER_TYPE),
       supabase
-        .from("stories")
-        .select("slug, title, body_md")
-        .eq("status", "published")
-        .or(like(["title", "body_md"], q))
-        .order("created_at", { ascending: false })
-        .limit(PER_TYPE),
-      supabase
         .from("ministries")
         .select("slug, name, summary")
         .eq("status", "published")
         .or(like(["name", "summary", "description_md"], q))
         .order("name")
-        .limit(PER_TYPE),
-      supabase
-        .from("pages")
-        .select("slug, title, body_md")
-        .eq("status", "published")
-        .or(like(["title", "body_md"], q))
-        .order("title")
         .limit(PER_TYPE),
     ]);
 
@@ -95,28 +81,12 @@ export async function searchSite(rawQuery: string | undefined): Promise<SearchRe
         snippet: excerpt(row.description ?? "", 120),
       });
     }
-    for (const row of stories.data ?? []) {
-      results.push({
-        kind: "Story",
-        title: row.title,
-        href: `/stories/${row.slug}`,
-        snippet: excerpt(row.body_md, 120),
-      });
-    }
     for (const row of ministries.data ?? []) {
       results.push({
         kind: "Ministry",
         title: row.name,
         href: `/ministries/${row.slug}`,
         snippet: excerpt(row.summary, 120),
-      });
-    }
-    for (const row of pages.data ?? []) {
-      results.push({
-        kind: "Page",
-        title: row.title,
-        href: `/pages/${row.slug}`,
-        snippet: excerpt(row.body_md, 120),
       });
     }
 

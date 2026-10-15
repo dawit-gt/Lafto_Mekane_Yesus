@@ -21,9 +21,7 @@ export function ContactForm() {
       <HoneypotField />
       <FormStatusBanner state={state} />
       <TextField label="Name" name="name" required errors={state.fieldErrors?.name} />
-      <TextField label="Email" name="email" type="email" required errors={state.fieldErrors?.email} />
-      <TextField label="Phone (optional)" name="phone" type="tel" errors={state.fieldErrors?.phone} />
-      <TextField label="Subject (optional)" name="subject" errors={state.fieldErrors?.subject} />
+      <TextField label="Phone" name="phone" type="tel" required errors={state.fieldErrors?.phone} />
       <TextAreaField label="Message" name="message" required errors={state.fieldErrors?.message} />
       <SubmitButton>Send Message</SubmitButton>
     </form>

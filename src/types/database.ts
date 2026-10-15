@@ -15,12 +15,6 @@ export interface Database {
         Update: Partial<Database["public"]["Tables"]["admin_users"]["Row"]>;
         Relationships: [];
       };
-      pages: {
-        Row: { id: string; slug: string; title: string; body_md: string; status: ContentStatus; updated_by: string | null; created_at: string; updated_at: string };
-        Insert: Partial<Database["public"]["Tables"]["pages"]["Row"]> & { slug: string; title: string };
-        Update: Partial<Database["public"]["Tables"]["pages"]["Row"]>;
-        Relationships: [];
-      };
       locations: {
         Row: { id: string; name: string; address_line1: string; address_line2: string | null; city: string; region: string | null; postal_code: string | null; country: string; latitude: number | null; longitude: number | null; directions_note: string | null; created_at: string; updated_at: string };
         Insert: Partial<Database["public"]["Tables"]["locations"]["Row"]> & { name: string; address_line1: string; city: string };
@@ -63,12 +57,6 @@ export interface Database {
         Update: Partial<Database["public"]["Tables"]["events"]["Row"]>;
         Relationships: [];
       };
-      stories: {
-        Row: { id: string; slug: string; title: string; category: "testimony" | "ministry" | "community" | null; body_md: string; image_url: string | null; featured: boolean; status: ContentStatus; created_at: string; updated_at: string };
-        Insert: Partial<Database["public"]["Tables"]["stories"]["Row"]> & { slug: string; title: string; body_md: string };
-        Update: Partial<Database["public"]["Tables"]["stories"]["Row"]>;
-        Relationships: [];
-      };
       announcements: {
         Row: { id: string; title: string; body_md: string; publish_at: string; expires_at: string | null; status: ContentStatus; created_at: string; updated_at: string };
         Insert: Partial<Database["public"]["Tables"]["announcements"]["Row"]> & { title: string; body_md: string };
@@ -94,8 +82,8 @@ export interface Database {
         Relationships: [];
       };
       contact_messages: {
-        Row: { id: string; name: string; email: string; phone: string | null; subject: string | null; message: string; status: SubmissionStatus; created_at: string };
-        Insert: Partial<Database["public"]["Tables"]["contact_messages"]["Row"]> & { name: string; email: string; message: string };
+        Row: { id: string; name: string; email: string | null; phone: string | null; subject: string | null; message: string; status: SubmissionStatus; created_at: string };
+        Insert: Partial<Database["public"]["Tables"]["contact_messages"]["Row"]> & { name: string; message: string };
         Update: Partial<Database["public"]["Tables"]["contact_messages"]["Row"]>;
         Relationships: [];
       };
@@ -105,20 +93,14 @@ export interface Database {
         Update: Partial<Database["public"]["Tables"]["prayer_requests"]["Row"]>;
         Relationships: [];
       };
-      volunteer_requests: {
-        Row: { id: string; name: string; email: string; phone: string | null; ministry_interest: string | null; availability_note: string | null; status: SubmissionStatus; created_at: string };
-        Insert: Partial<Database["public"]["Tables"]["volunteer_requests"]["Row"]> & { name: string; email: string };
-        Update: Partial<Database["public"]["Tables"]["volunteer_requests"]["Row"]>;
-        Relationships: [];
-      };
       giving_settings: {
-        Row: { id: number; is_online_giving_enabled: boolean; provider_name: string | null; provider_url: string | null; informational_note: string; updated_at: string };
+        Row: { id: number; is_online_giving_enabled: boolean; provider_name: string | null; provider_url: string | null; informational_note: string; accounts: unknown; updated_at: string };
         Insert: Partial<Database["public"]["Tables"]["giving_settings"]["Row"]>;
         Update: Partial<Database["public"]["Tables"]["giving_settings"]["Row"]>;
         Relationships: [];
       };
       site_settings: {
-        Row: { id: number; service_times_md: string; default_locale: string; supported_locales: string[]; seo_default_title: string | null; seo_default_description: string | null; church_name: string | null; church_name_am: string | null; telegram_group_url: string | null; hero_image_url: string | null; hero_title: string | null; hero_text: string | null; hero_title_am: string | null; hero_text_am: string | null; about_intro: string | null; about_mission: string | null; about_denomination: string | null; about_intro_am: string | null; about_mission_am: string | null; about_denomination_am: string | null; updated_at: string };
+        Row: { id: number; service_times_md: string; default_locale: string; supported_locales: string[]; seo_default_title: string | null; seo_default_description: string | null; church_name: string | null; church_name_am: string | null; telegram_group_url: string | null; hero_image_url: string | null; hero_title: string | null; hero_text: string | null; hero_title_am: string | null; hero_text_am: string | null; about_intro: string | null; about_mission: string | null; about_denomination: string | null; about_intro_am: string | null; about_mission_am: string | null; about_denomination_am: string | null; contact_phones: unknown; updated_at: string };
         Insert: Partial<Database["public"]["Tables"]["site_settings"]["Row"]>;
         Update: Partial<Database["public"]["Tables"]["site_settings"]["Row"]>;
         Relationships: [];
@@ -143,13 +125,11 @@ export type Event = Database["public"]["Tables"]["events"]["Row"];
 export type SermonSeries = Database["public"]["Tables"]["sermon_series"]["Row"];
 export type Sermon = Database["public"]["Tables"]["sermons"]["Row"];
 export type Ministry = Database["public"]["Tables"]["ministries"]["Row"];
-export type Story = Database["public"]["Tables"]["stories"]["Row"];
 export type Announcement = Database["public"]["Tables"]["announcements"]["Row"];
 export type Faq = Database["public"]["Tables"]["faqs"]["Row"];
 export type Leader = Database["public"]["Tables"]["leaders"]["Row"];
 export type Location = Database["public"]["Tables"]["locations"]["Row"];
 export type SiteSettings = Database["public"]["Tables"]["site_settings"]["Row"];
 export type GivingSettings = Database["public"]["Tables"]["giving_settings"]["Row"];
-export type Page = Database["public"]["Tables"]["pages"]["Row"];
 export type Member = Database["public"]["Tables"]["members"]["Row"];
 export type Media = Database["public"]["Tables"]["media"]["Row"];

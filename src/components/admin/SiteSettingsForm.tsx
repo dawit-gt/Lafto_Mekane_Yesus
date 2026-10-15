@@ -5,6 +5,8 @@ import { updateSiteSettings } from "@/lib/actions/admin-settings";
 import { initialFormState } from "@/lib/actions/state";
 import { TextField, TextAreaField } from "@/components/ui/Field";
 import { ImageUploadField } from "@/components/admin/ImageUploadField";
+import { RepeatableRows } from "@/components/admin/RepeatableRows";
+import { toPhones } from "@/lib/utils/contact-lists";
 import { SubmitButton } from "@/components/ui/SubmitButton";
 import { FormStatusBanner } from "@/components/forms/FormStatusBanner";
 import type { SiteSettings } from "@/types/database";
@@ -55,6 +57,22 @@ export function SiteSettingsForm({ settings, tab }: { settings: SiteSettings; ta
           defaultValue={settings.telegram_group_url ?? undefined}
           hint="For example https://t.me/+AbCdEfGh123. It appears in the footer and on the Contact page. Leave empty to hide the Telegram links."
           errors={state.fieldErrors?.telegramGroupUrl}
+        />
+
+        <RepeatableRows
+          legend="Phone Numbers"
+          hint="Shown on the public Contact page. The name is optional, e.g. Church Office or Pastor."
+          addLabel="Add phone number"
+          emptyNote="No phone numbers yet."
+          initial={toPhones(settings.contact_phones).map((p) => ({
+            phoneName: p.name,
+            phoneNumber: p.number,
+          }))}
+          fields={[
+            { name: "phoneName", label: "Name (optional)", placeholder: "Church Office" },
+            { name: "phoneNumber", label: "Phone number", placeholder: "+251 91 123 4567", inputMode: "tel" },
+          ]}
+          errors={state.fieldErrors?.contactPhones}
         />
       </div>
 

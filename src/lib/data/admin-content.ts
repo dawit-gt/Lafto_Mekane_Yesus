@@ -6,10 +6,8 @@ import type {
   Leader,
   Location,
   Ministry,
-  Page,
   Sermon,
   SermonSeries,
-  Story,
 } from "@/types/database";
 
 /**
@@ -170,40 +168,6 @@ export async function getAdminMinistryById(id: string): Promise<Ministry | null>
 }
 
 // ---------------------------------------------------------------------
-// Stories
-// ---------------------------------------------------------------------
-export async function getAdminStories(): Promise<Story[]> {
-  try {
-    const supabase = await createClient();
-    const { data, error } = await supabase
-      .from("stories")
-      .select("*")
-      .order("created_at", { ascending: false });
-    if (error) throw error;
-    return data ?? [];
-  } catch (err) {
-    console.error("getAdminStories failed:", err);
-    return [];
-  }
-}
-
-export async function getAdminStoryById(id: string): Promise<Story | null> {
-  try {
-    const supabase = await createClient();
-    const { data, error } = await supabase
-      .from("stories")
-      .select("*")
-      .eq("id", id)
-      .maybeSingle();
-    if (error) throw error;
-    return data;
-  } catch (err) {
-    console.error("getAdminStoryById failed:", err);
-    return null;
-  }
-}
-
-// ---------------------------------------------------------------------
 // Announcements
 // ---------------------------------------------------------------------
 export async function getAdminAnnouncements(): Promise<Announcement[]> {
@@ -235,33 +199,6 @@ export async function getAdminAnnouncementById(
     return data;
   } catch (err) {
     console.error("getAdminAnnouncementById failed:", err);
-    return null;
-  }
-}
-
-// ---------------------------------------------------------------------
-// Pages
-// ---------------------------------------------------------------------
-export async function getAdminPages(): Promise<Page[]> {
-  try {
-    const supabase = await createClient();
-    const { data, error } = await supabase.from("pages").select("*").order("title");
-    if (error) throw error;
-    return data ?? [];
-  } catch (err) {
-    console.error("getAdminPages failed:", err);
-    return [];
-  }
-}
-
-export async function getAdminPageById(id: string): Promise<Page | null> {
-  try {
-    const supabase = await createClient();
-    const { data, error } = await supabase.from("pages").select("*").eq("id", id).maybeSingle();
-    if (error) throw error;
-    return data;
-  } catch (err) {
-    console.error("getAdminPageById failed:", err);
     return null;
   }
 }

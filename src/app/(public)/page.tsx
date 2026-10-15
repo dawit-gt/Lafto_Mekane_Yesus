@@ -6,7 +6,6 @@ import { Reveal } from "@/components/ui/Reveal";
 import { CrossMark } from "@/components/brand/CrossMark";
 import {
   getAnnouncements,
-  getFeaturedStory,
   getLatestSermon,
   getSiteSettings,
   getUpcomingEvents,
@@ -15,11 +14,10 @@ import { getLocale } from "@/lib/i18n/server";
 import { excerpt, formatEventDateTime } from "@/lib/utils/format";
 
 export default async function HomePage() {
-  const [announcements, sermon, events, story, settings] = await Promise.all([
+  const [announcements, sermon, events, settings] = await Promise.all([
     getAnnouncements(),
     getLatestSermon(),
     getUpcomingEvents(3),
-    getFeaturedStory(),
     getSiteSettings(),
   ]);
 
@@ -198,31 +196,6 @@ export default async function HomePage() {
         )}
         </Reveal>
       </Section>
-
-      {/* Featured story */}
-      {story && (
-        <Section>
-          <Reveal>
-          <div className="grid gap-8 lg:grid-cols-[1fr_1.4fr] lg:items-center">
-            <div className="aspect-video rounded-sm bg-line" />
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-brass">
-                Story
-              </p>
-              <h2 className="mt-1 font-serif text-2xl font-bold text-ink">
-                {story.title}
-              </h2>
-              <p className="prose-body mt-3 text-ink/80">
-                {excerpt(story.body_md, 220)}
-              </p>
-              <Button href={`/stories/${story.slug}`} variant="ghost" className="mt-2 px-0">
-                Read the full story →
-              </Button>
-            </div>
-          </div>
-          </Reveal>
-        </Section>
-      )}
 
       {/* Closing CTA */}
       <Section tone="forest" className="text-center">

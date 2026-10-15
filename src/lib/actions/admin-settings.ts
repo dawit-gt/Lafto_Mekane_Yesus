@@ -6,7 +6,42 @@ import { createClient } from "@/lib/supabase/server";
 import { normalizeTelegramUrl } from "@/lib/site-config";
 import type { FormState } from "@/lib/actions/state";
 
+const phoneRowSchema = z.object({
+  name: z.string().trim().max(80, "Names can be up to 80 characters."),
+  number: z
+    .string()
+    .trim()
+    .min(1, "Enter the phone number for every row (or remove the row).")
+    .max(25, "Phone numbers can be up to 25 characters.")
+    .regex(/^[0-9+()\-\s]+$/, "Use only digits, spaces, + ( ) and -."),
+});
+
+const accountRowSchema = z.object({
+  provider: z.string().trim().min(1, "Enter the provider name (for example a bank) on every row.").max(80),
+  holder: z.string().trim().max(80, "Account names can be up to 80 characters."),
+  number: z
+    .string()
+    .trim()
+    .min(1, "Enter the account number on every row (or remove the row).")
+    .max(40, "Account numbers can be up to 40 characters.")
+    .regex(/^[0-9A-Za-z\s\-+]+$/, "Use only letters, digits, spaces and -."),
+});
+
+/** Pairs up parallel form fields (one value per row) and drops rows left completely empty. */
+function readRows(formData: FormData, names: string[]): Record<string, string>[] {
+  const columns = names.map((n) => formData.getAll(n).map((v) => (typeof v === "string" ? v : "")));
+  const count = Math.max(0, ...columns.map((c) => c.length));
+  const rows: Record<string, string>[] = [];
+  for (let i = 0; i < count; i++) {
+    const row: Record<string, string> = {};
+    names.forEach((n, c) => (row[n] = columns[c][i] ?? ""));
+    if (Object.values(row).some((v) => v.trim() !== "")) rows.push(row);
+  }
+  return rows;
+}
+
 const siteSettingsSchema = z.object({
+  contactPhones: z.array(phoneRowSchema).max(10, "You can add up to 10 phone numbers."),
   serviceTimesMd: z.string().trim().max(1000).optional().or(z.literal("")),
   seoDefaultTitle: z.string().trim().max(120).optional().or(z.literal("")),
   seoDefaultDescription: z.string().trim().max(300).optional().or(z.literal("")),
@@ -34,28 +69,10 @@ const siteSettingsSchema = z.object({
     .optional(),
 });
 
-const givingSettingsSchema = z
-  .object({
-    isOnlineGivingEnabled: z.boolean(),
-    providerName: z.string().trim().max(100).optional().or(z.literal("")),
-    providerUrl: z
-      .string()
-      .trim()
-      .url("Enter a valid URL.")
-      .refine((v) => v.startsWith("https://"), "The link must start with https://")
-      .optional()
-      .or(z.literal("")),
-    informationalNote: z.string().trim().min(1, "Please enter a note for visitors.").max(1000),
-  })
-  .superRefine((d, ctx) => {
-    if (d.isOnlineGivingEnabled && !d.providerUrl) {
-      ctx.addIssue({
-        code: "custom",
-        message: "Add the giving link before turning online giving on.",
-        path: ["providerUrl"],
-      });
-    }
-  });
+const givingSettingsSchema = z.object({
+  informationalNote: z.string().trim().min(1, "Please enter a note for visitors.").max(1000),
+  accounts: z.array(accountRowSchema).max(10, "You can add up to 10 accounts."),
+});
 
 async function logAudit(
   supabase: Awaited<ReturnType<typeof createClient>>,
@@ -94,6 +111,10 @@ export async function updateSiteSettings(
     churchName: formData.get("churchName"),
     churchNameAm: formData.get("churchNameAm"),
     telegramGroupUrl: formData.get("telegramGroupUrl") ?? "",
+    contactPhones: readRows(formData, ["phoneName", "phoneNumber"]).map((r) => ({
+      name: r.phoneName,
+      number: r.phoneNumber,
+    })),
   });
 
   if (!parsed.success) {
@@ -133,6 +154,7 @@ export async function updateSiteSettings(
         church_name: d.churchName || null,
         church_name_am: d.churchNameAm || null,
         telegram_group_url: d.telegramGroupUrl || null,
+        contact_phones: d.contactPhones,
       })
       .eq("id", 1)
       .select("id");
@@ -156,10 +178,12 @@ export async function updateGivingSettings(
   formData: FormData
 ): Promise<FormState> {
   const parsed = givingSettingsSchema.safeParse({
-    isOnlineGivingEnabled: formData.get("isOnlineGivingEnabled") === "on",
-    providerName: formData.get("providerName"),
-    providerUrl: formData.get("providerUrl"),
     informationalNote: formData.get("informationalNote"),
+    accounts: readRows(formData, ["accountProvider", "accountHolder", "accountNumber"]).map((r) => ({
+      provider: r.accountProvider,
+      holder: r.accountHolder,
+      number: r.accountNumber,
+    })),
   });
 
   if (!parsed.success) {
@@ -181,9 +205,7 @@ export async function updateGivingSettings(
     const { data, error } = await supabase
       .from("giving_settings")
       .update({
-        is_online_giving_enabled: d.isOnlineGivingEnabled,
-        provider_name: d.providerName || null,
-        provider_url: d.providerUrl || null,
+        accounts: d.accounts,
         informational_note: d.informationalNote,
       })
       .eq("id", 1)
@@ -193,7 +215,7 @@ export async function updateGivingSettings(
     if (!data || data.length === 0) throw new Error("No settings row was updated");
 
     await logAudit(supabase, user.id, "giving_settings", {
-      online_giving_enabled: d.isOnlineGivingEnabled,
+      account_count: d.accounts.length,
     });
   } catch (err) {
     console.error("updateGivingSettings failed:", err);

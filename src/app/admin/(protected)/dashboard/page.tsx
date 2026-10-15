@@ -12,15 +12,12 @@ const contentLabels: Record<string, string> = {
   events: "Events",
   sermons: "Sermons",
   ministries: "Ministries",
-  stories: "Stories",
   announcements: "Announcements",
-  pages: "Pages",
 };
 
 const submissionLabels: Record<string, { label: string; href: string }> = {
   contact: { label: "New Contact Messages", href: "/admin/communication?tab=contact" },
   prayer: { label: "New Prayer Requests", href: "/admin/communication?tab=prayer" },
-  volunteer: { label: "New Volunteer Interest", href: "/admin/communication?tab=volunteer" },
 };
 
 export default async function AdminDashboardPage() {
@@ -35,7 +32,7 @@ export default async function AdminDashboardPage() {
       <h1 className="text-2xl font-bold text-forest">Dashboard</h1>
 
       {/* New submissions — the thing that needs the fastest response */}
-      <div className="mt-6 grid gap-4 sm:grid-cols-3">
+      <div className="mt-6 grid gap-4 sm:grid-cols-2">
         {(Object.keys(submissionLabels) as Array<keyof typeof submissionLabels>).map((key) => (
           <Link key={key} href={submissionLabels[key].href}>
             <Card className="transition-colors hover:border-brass">

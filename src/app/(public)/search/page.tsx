@@ -25,7 +25,7 @@ export default async function SearchPage({ searchParams }: Props) {
         <h1 className="font-serif text-4xl font-bold">Search</h1>
         <form action="/search" method="get" role="search" className="mt-6 flex max-w-xl gap-3">
           <label htmlFor="site-search" className="sr-only">
-            Search sermons, events, stories and ministries
+            Search sermons, events and ministries
           </label>
           <input
             id="site-search"
@@ -33,7 +33,7 @@ export default async function SearchPage({ searchParams }: Props) {
             type="search"
             defaultValue={query}
             maxLength={60}
-            placeholder="Search sermons, events, stories…"
+            placeholder="Search sermons, events, ministries…"
             className="w-full rounded-sm border border-paper-raised/30 bg-paper-raised px-4 py-2.5 text-sm text-ink placeholder:text-ink/50 focus-visible:outline-none"
           />
           <button

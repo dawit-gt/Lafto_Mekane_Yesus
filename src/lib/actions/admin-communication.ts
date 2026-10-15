@@ -4,7 +4,7 @@ import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 
-const tableSchema = z.enum(["contact_messages", "prayer_requests", "volunteer_requests"]);
+const tableSchema = z.enum(["contact_messages", "prayer_requests"]);
 const statusSchema = z.enum(["new", "in_progress", "resolved", "archived"]);
 
 type SubmissionTable = z.infer<typeof tableSchema>;
@@ -28,7 +28,7 @@ async function logAudit(
 }
 
 // One explicit branch per table keeps the typed Supabase client happy and
-// guarantees only these three tables can ever be touched.
+// guarantees only these tables can ever be touched.
 async function applyStatus(
   supabase: Awaited<ReturnType<typeof createClient>>,
   table: SubmissionTable,
@@ -42,10 +42,6 @@ async function applyStatus(
     }
     case "prayer_requests": {
       const { error } = await supabase.from("prayer_requests").update({ status }).eq("id", id);
-      return error;
-    }
-    case "volunteer_requests": {
-      const { error } = await supabase.from("volunteer_requests").update({ status }).eq("id", id);
       return error;
     }
   }
@@ -63,10 +59,6 @@ async function removeRow(
     }
     case "prayer_requests": {
       const { error } = await supabase.from("prayer_requests").delete().eq("id", id);
-      return error;
-    }
-    case "volunteer_requests": {
-      const { error } = await supabase.from("volunteer_requests").delete().eq("id", id);
       return error;
     }
   }
